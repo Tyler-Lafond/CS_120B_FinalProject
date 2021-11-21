@@ -108,7 +108,7 @@ void tickDisplay() {
 	{
 		case Display_Show:
 			LCD_ClearScreen();
-			LCD_Cursor(1);
+		//	LCD_Cursor(1);
 			LCD_DisplayString(1, vSPD);
 			break;
 			if (vSpeed < 0) {
