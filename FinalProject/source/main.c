@@ -155,6 +155,31 @@ void tickDisplay() {
 	}
 }
 
+enum Test_states { Test_SMStart, Test_Test } Test_state;
+void tickTest() {
+	switch(Test_state)
+	{
+		case Test_SMStart:
+			Test_state = Test_Test;
+			break;
+		case Test_Test:
+			break;
+		default:
+			Test_state = Test_SMStart;
+			break;
+	}
+
+	switch(Test_state)
+	{
+		case Test_Test:
+			LCD_ClearScreen();
+			LCD_Cursor(1);
+			LCD_WriteData(1 + '0');
+			break;
+		default:
+			break;
+	}
+}
 int main(void) {
     /* Insert DDR and PORT initializations */
 	DDRA = 0x00; PORTA = 0xFF;
@@ -167,9 +192,10 @@ int main(void) {
 	TimerOn();
 	ReadSpeed_state = ReadSpeed_SMStart;
 	Display_state = Display_SMStart;
+	Test_state = Test_SMStart;
     while (1) {
 //	tickReadSpeed();
-	tickDisplay();
+	tickTest();
 	while(!TimerFlag);
 	TimerFlag = 0;
     }
