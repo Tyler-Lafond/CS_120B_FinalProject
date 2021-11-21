@@ -13,6 +13,7 @@
 #include "io.h"
 #endif
 
+unsigned short vPort, hPort;
 char vSpeed, hSpeed;
 short vPos, hPos;
 unsigned const char vSpd[6] = "vSPD: ";
@@ -32,6 +33,29 @@ void ADC_init() {
 	// 	the previous conversion completes.
 } 
 
+enum Speed_states { Speed_SMStart, Speed_Convert } Speed_state;
+void tickSpeed() {
+	switch(Speed_state)
+	{
+		case Speed_SMStart:
+			Speed_state = Speed_Convert;
+			break;
+		case Speed_Convert:
+			Speed_state = Speed_Convert;
+			break;
+		default:
+			Speed_state = Speed_SMStart;
+			break;
+	}
+
+	switch(Speed_state)
+	{
+		case Speed_Convert:
+			break;
+		default:
+			break;
+	}
+}
 enum Display_states { Display_SMStart, Display_Show } Display_state;
 void tickDisplay() {
 	switch(Display_state)
@@ -83,7 +107,9 @@ void tickDisplay() {
 
 int main(void) {
     /* Insert DDR and PORT initializations */
-
+	DDRA = 0x00; PORTA = 0xFF;
+	DDRC = 0xFF; PORTC = 0x00;
+	DDRD = 0xFF; PORTD = 0x00;
     /* Insert your solution below */
     while (1) {
 
