@@ -159,10 +159,13 @@ int main(void) {
 	DDRD = 0xFF; PORTD = 0x00;
     /* Insert your solution below */
 	ADC_init();
-	TimerSet(50);
+	TimerSet(100);
 	TimerOn();
     while (1) {
-
+	tickReadSpeed();
+	tickDisplay();
+	while(!TimerFlag) {}
+	TimerFlag = 0;
     }
     return 1;
 }
