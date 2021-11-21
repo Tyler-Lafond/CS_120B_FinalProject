@@ -193,9 +193,10 @@ int main(void) {
 	ReadSpeed_state = ReadSpeed_SMStart;
 	Display_state = Display_SMStart;
 	Test_state = Test_SMStart;
+	LCD_DisplayString(1, vSPD);
 	while (1) {
 //	tickReadSpeed();
-		tickTest();
+	//	tickTest();
 		while(!TimerFlag);
 		TimerFlag = 0;
 	}
