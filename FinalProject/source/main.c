@@ -159,6 +159,7 @@ int main(void) {
 	DDRD = 0xFF; PORTD = 0x00;
     /* Insert your solution below */
 	ADC_init();
+	LCD_init();
 	TimerSet(1000);
 	TimerOn();
 	ReadSpeed_state = ReadSpeed_SMStart;
