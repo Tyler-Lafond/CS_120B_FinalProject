@@ -1,7 +1,7 @@
 /*	Author: tlafo001
  *  Partner(s) Name: 
  *	Lab Section: 022
- *	Assignment: Lab #  Exercise #
+ *	Assignment: Lab # FinalProject  Exercise # 1
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
@@ -14,9 +14,10 @@
 #include "io.h"
 #endif
 
-unsigned short vPort, hPort;
+unsigned short vPort, hPort, temp;
 char vSpeed, hSpeed;
 short vPos, hPos;
+unsigned char itr, iPrint;
 unsigned const char vSpd[6] = "vSPD: ";
 unsigned const char hSpd[6] = "hSPD: ";
 unsigned const char negative[1] = "-";
@@ -33,6 +34,33 @@ void ADC_init() {
 	// 	in Free-Running Mode, a new conversion will trigger whenever
 	// 	the previous conversion completes.
 } 
+
+enum ReadSpeed_states { ReadSpeed_SMStart, ReadSpeed_Read } ReadSpeed_state;
+void tickReadSpeed() {
+	switch(ReadSpeed_state)
+	{
+		case ReadSpeed_SMStart:
+			ReadSpeed_state = ReadSpeed_Read;
+			break;
+		case ReadSpeed_Read:
+			ReadSpeed_state = ReadSpeed_Read;
+			break;
+		default:
+			break;
+	}
+
+	switch(ReadSpeed_state)
+	{
+		case ReadSpeed_Read:
+			ADMUX = 0x00;
+			vPort = ADC;
+			ADMUX = 0x01;
+			hPort = ADC;
+			break;
+		default:
+			break;
+	}
+}
 
 enum Speed_states { Speed_SMStart, Speed_Convert } Speed_state;
 void tickSpeed() {
@@ -52,6 +80,8 @@ void tickSpeed() {
 	switch(Speed_state)
 	{
 		case Speed_Convert:
+			vSpeed = vPort;
+			hSpeed = hPort;
 			break;
 		default:
 			break;
@@ -85,8 +115,16 @@ void tickDisplay() {
 			}
 			else
 			{
-				LCD_Cursor(7);
-				LCD_WriteData(vSpeed + '0');
+				//LCD_Cursor(7);
+				itr = 7;
+				while(vPort != 0)
+				{
+					iPrint = vPort % 10;
+					vPort = vPort / 10;
+					LCD_Cursor(itr);
+					LCD_WriteData(iPrint + '0');
+					itr++;
+				}
 			}
 			LCD_Cursor(17);
 			LCD_DisplayString(1, hSPD);
@@ -97,8 +135,16 @@ void tickDisplay() {
 			}
 			else
 			{
-				LCD_Cursor(23);
-				LCD_WriteData(hSpeed + '0');
+				//LCD_Cursor(23);
+				itr = 23;
+				while(!hPort)
+				{
+					iPrint = hPort % 10;
+					hPort = hPort / 10;
+					LCD_Cursor(itr);
+					LCD_WriteData(iPrint + '0');
+					itr++;
+				}
 			}
 			break;
 		default:
