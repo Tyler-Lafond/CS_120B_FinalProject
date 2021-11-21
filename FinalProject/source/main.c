@@ -168,7 +168,7 @@ int main(void) {
 	ReadSpeed_state = ReadSpeed_SMStart;
 	Display_state = Display_SMStart;
     while (1) {
-	tickReadSpeed();
+//	tickReadSpeed();
 	tickDisplay();
 	while(!TimerFlag);
 	TimerFlag = 0;
