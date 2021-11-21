@@ -14,7 +14,9 @@
 #include "io.h"
 #endif
 
-unsigned short vPort, hPort, temp;
+unsigned short vPort = 0;
+unsigned short hPort = 0;
+unsigned short temp;
 char vSpeed, hSpeed;
 short vPos, hPos;
 unsigned char itr, iPrint;
@@ -108,6 +110,7 @@ void tickDisplay() {
 			LCD_ClearScreen();
 			LCD_Cursor(1);
 			LCD_DisplayString(1, vSPD);
+			break;
 			if (vSpeed < 0) {
 				LCD_DisplayString(7, neg);
 				LCD_Cursor(8);
