@@ -193,11 +193,11 @@ int main(void) {
 	ReadSpeed_state = ReadSpeed_SMStart;
 	Display_state = Display_SMStart;
 	Test_state = Test_SMStart;
-    while (1) {
+    	while (1) {
 //	tickReadSpeed();
-	tickTest();
-	while(!TimerFlag);
-	TimerFlag = 0;
-    }
-    return 1;
+		tickTest();
+		while(!TimerFlag);
+		TimerFlag = 0;
+   	 }
+   	 return 1;
 }
