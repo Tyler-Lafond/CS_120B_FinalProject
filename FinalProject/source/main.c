@@ -161,10 +161,12 @@ int main(void) {
 	ADC_init();
 	TimerSet(1000);
 	TimerOn();
+	ReadSpeed_state = ReadSpeed_SMStart;
+	Display_state = Display_SMStart;
     while (1) {
 	tickReadSpeed();
 	tickDisplay();
-	while(!TimerFlag) {}
+	while(!TimerFlag);
 	TimerFlag = 0;
     }
     return 1;
