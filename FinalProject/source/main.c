@@ -186,18 +186,18 @@ int main(void) {
 	DDRC = 0xFF; PORTC = 0x00;
 	DDRD = 0xFF; PORTD = 0x00;
     /* Insert your solution below */
-	ADC_init();
+//	ADC_init();
 	LCD_init();
 	TimerSet(1000);
 	TimerOn();
 	ReadSpeed_state = ReadSpeed_SMStart;
 	Display_state = Display_SMStart;
 	Test_state = Test_SMStart;
-    	while (1) {
+	while (1) {
 //	tickReadSpeed();
 		tickTest();
 		while(!TimerFlag);
 		TimerFlag = 0;
-   	 }
-   	 return 1;
+	}
+	return 1;
 }
