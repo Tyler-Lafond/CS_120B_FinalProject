@@ -198,6 +198,7 @@ int main(void) {
 //	LCD_DisplayString(1, vSPD);
 	while (1) {
 		tickReadSpeed();
+		tickDisplay();
 		while(!TimerFlag);
 		TimerFlag = 0;
 	}
