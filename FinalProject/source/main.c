@@ -60,6 +60,7 @@ void tickReadSpeed() {
 			ADCSRA |= (1 << ADSC);
 			ADMUX = 0x00;
 			vPort = ADC;
+			delay_ms(1);
 			ADCSRA |= (1 << ADSC);
 			ADMUX |= (1 << MUX0);
 			hPort = ADC;
