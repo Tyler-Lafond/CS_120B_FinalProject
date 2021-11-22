@@ -139,7 +139,7 @@ void tickDisplay() {
 			{
 				//LCD_Cursor(23);
 				itr = 23;
-				while(!hPort)
+				while(hPort != 0)
 				{
 					iPrint = hPort % 10;
 					hPort = hPort / 10;
