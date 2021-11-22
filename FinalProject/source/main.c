@@ -155,6 +155,8 @@ void tickDisplay() {
 	}
 }
 
+//SM to test features
+/*
 enum Test_states { Test_SMStart, Test_Test } Test_state;
 void tickTest() {
 	switch(Test_state)
@@ -179,24 +181,24 @@ void tickTest() {
 		default:
 			break;
 	}
-}
+}*/
+
 int main(void) {
     /* Insert DDR and PORT initializations */
 	DDRA = 0x00; PORTA = 0xFF;
 	DDRC = 0xFF; PORTC = 0x00;
 	DDRD = 0xFF; PORTD = 0x00;
     /* Insert your solution below */
-//	ADC_init();
+	ADC_init();
 	LCD_init();
 	TimerSet(1000);
 	TimerOn();
 	ReadSpeed_state = ReadSpeed_SMStart;
 	Display_state = Display_SMStart;
-	Test_state = Test_SMStart;
-	LCD_DisplayString(1, vSPD);
+//	Test_state = Test_SMStart;
+//	LCD_DisplayString(1, vSPD);
 	while (1) {
-//	tickReadSpeed();
-	//	tickTest();
+		tickReadSpeed();
 		while(!TimerFlag);
 		TimerFlag = 0;
 	}
