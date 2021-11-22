@@ -72,7 +72,6 @@ void tickReadSpeed() {
 
 enum Speed_states { Speed_SMStart, Speed_Convert } Speed_state;
 void tickSpeed() {
-	vPort = vPort * -1;
 	deg = MAX/11;
 	switch(Speed_state)
 	{
