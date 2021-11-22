@@ -110,7 +110,7 @@ void tickDisplay() {
 			LCD_ClearScreen();
 		//	LCD_Cursor(1);
 			LCD_DisplayString(1, vSPD);
-			if (vSpeed < 0) {
+			if (/*vSpeed < */0) {
 				LCD_DisplayString(7, neg);
 				LCD_Cursor(8);
 				LCD_WriteData((vSpeed * -1) + '0');
