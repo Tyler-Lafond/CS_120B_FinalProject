@@ -128,8 +128,8 @@ void tickDisplay() {
 					itr++;
 				}
 			}
-			LCD_Cursor(17);
-			LCD_DisplayString(1, hSPD);
+			//LCD_Cursor(17);
+			LCD_DisplayString(17, hSPD);
 			if (hSpeed < 0) {
 				LCD_DisplayString(23, neg);
 				LCD_Cursor(24);
