@@ -23,8 +23,8 @@ unsigned short temp;
 char vSpeed, hSpeed;
 short vPos, hPos;
 unsigned char itr, iPrint;
-unsigned const char vSpd[6] = "vSPD: ";
-unsigned const char hSpd[6] = "hSPD: ";
+unsigned const char vSpd[6] = "vSPD:";
+unsigned const char hSpd[6] = "hSPD:";
 unsigned const char negative[1] = "-";
 unsigned const char* vSPD = vSpd;
 unsigned const char* hSPD = hSpd;
@@ -203,25 +203,25 @@ void tickDisplay() {
 		//	LCD_Cursor(1);
 			LCD_DisplayString(1, vSPD);
 			if (vSpeed < 0) {
-				LCD_DisplayString(7, neg);
-				LCD_Cursor(8);
+				LCD_DisplayString(6, neg);
+				LCD_Cursor(7);
 				LCD_WriteData((vSpeed * -1) + '0');
 			}
 			else
 			{
-				LCD_Cursor(7);
+				LCD_Cursor(6);
 				LCD_WriteData(vSpeed + '0');
 			}
 			//LCD_Cursor(17);
 			LCD_DisplayString(17, hSPD);
 			if (hSpeed < 0) {
-				LCD_DisplayString(23, neg);
-				LCD_Cursor(24);
+				LCD_DisplayString(22, neg);
+				LCD_Cursor(23);
 				LCD_WriteData((hSpeed * -1) + '0');
 			}
 			else
 			{
-				LCD_Cursor(23);
+				LCD_Cursor(22);
 				LCD_WriteData(hSpeed + '0');
 			}
 			break;
