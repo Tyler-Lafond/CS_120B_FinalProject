@@ -14,6 +14,9 @@
 #include "io.h"
 #endif
 
+unsigned short MAX = 1004;
+unsigned short MIN = 30;
+unsigned short deg;
 unsigned short vPort = 0;
 unsigned short hPort = 0;
 unsigned short temp;
@@ -81,9 +84,98 @@ void tickSpeed() {
 
 	switch(Speed_state)
 	{
+		deg = MAX/11;
 		case Speed_Convert:
-			vSpeed = vPort;
-			hSpeed = hPort;
+			if (vPort >= (deg*10))
+			{
+				vSpeed = 5;
+			}
+			else if (vPort >= (deg*9))
+			{
+				vSpeed = 4;
+			}
+			else if (vPort >= (deg*8))
+			{
+				vSpeed = 3;
+			}
+			else if (vPort >= (deg*7))
+			{
+				vSpeed = 2;
+			}
+			else if (vPort >= (deg*6))
+			{
+				vSpeed = 1;
+			}
+			else if (vPort >= (deg*5))
+			{
+				vSpeed = 0;
+			}
+			else if (vPort >= (deg*4))
+			{
+				vSpeed = -1;
+			}
+			else if (vPort >= (deg*3))
+			{
+				vSpeed = -2;
+			}
+			else if (vPort >= (deg*2))
+			{
+				vSpeed = -3;
+			}
+			else if (vPort >= (deg))
+			{
+				vSpeed = -4;
+			}
+			else
+			{
+				vSpeed = -5;
+			}
+
+			if (hPort >= (deg*10))
+			{
+				hSpeed = 5;
+			}
+			else if (hPort >= (deg*9))
+			{
+				hSpeed = 4;
+			}
+			else if (hPort >= (deg*8))
+			{
+				hSpeed = 3;
+			}
+			else if (hPort >= (deg*7))
+			{
+				hSpeed = 2;
+			}
+			else if (hPort >= (deg*6))
+			{
+				hSpeed = 1;
+			}
+			else if (hPort >= (deg*5))
+			{
+				hSpeed = 0;
+			}
+			else if (hPort >= (deg*4))
+			{
+				hSpeed = -1;
+			}
+			else if (hPort >= (deg*3))
+			{
+				hSpeed = -2;
+			}
+			else if (hPort >= (deg*2))
+			{
+				hSpeed = -3;
+			}
+			else if (hPort >= (deg))
+			{
+				hSpeed = -4;
+			}
+			else
+			{
+				hSpeed = -5;
+			}
+
 			break;
 		default:
 			break;
@@ -110,43 +202,27 @@ void tickDisplay() {
 			LCD_ClearScreen();
 		//	LCD_Cursor(1);
 			LCD_DisplayString(1, vSPD);
-			if (/*vSpeed < */0) {
+			if (vSpeed < 0) {
 				LCD_DisplayString(7, neg);
 				LCD_Cursor(8);
 				LCD_WriteData((vSpeed * -1) + '0');
 			}
 			else
 			{
-				//LCD_Cursor(7);
-				itr = 7;
-				while(vPort != 0)
-				{
-					iPrint = vPort % 10;
-					vPort = vPort / 10;
-					LCD_Cursor(itr);
-					LCD_WriteData(iPrint + '0');
-					itr++;
-				}
+				LCD_Cursor(7);
+				LCD_WriteData(vSpeed + '0');
 			}
 			//LCD_Cursor(17);
 			LCD_DisplayString(17, hSPD);
-			if (/*hSpeed < */0) {
+			if (hSpeed < 0) {
 				LCD_DisplayString(23, neg);
 				LCD_Cursor(24);
-				LCD_WriteData((hPort * -1) + '0');
+				LCD_WriteData((hSpeed * -1) + '0');
 			}
 			else
 			{
-				//LCD_Cursor(23);
-				itr = 23;
-				while(hPort != 0)
-				{
-					iPrint = hPort % 10;
-					hPort = hPort / 10;
-					LCD_Cursor(itr);
-					LCD_WriteData(iPrint + '0');
-					itr++;
-				}
+				LCD_Cursor(23);
+				LCD_WriteData(hSpeed + '0');
 			}
 			break;
 		default:
@@ -190,16 +266,15 @@ int main(void) {
     /* Insert your solution below */
 	ADC_init();
 	LCD_init();
-	TimerSet(500);
+	TimerSet(1000);
 	TimerOn();
 	ReadSpeed_state = ReadSpeed_SMStart;
 	Display_state = Display_SMStart;
 //	Test_state = Test_SMStart;
-	LCD_DisplayString(1, vSPD);
 	while (1) {
-//		tickReadSpeed();
-//		tickSpeed();
-//		tickDisplay();
+		tickReadSpeed();
+		tickSpeed();
+		tickDisplay();
 		while(!TimerFlag);
 		TimerFlag = 0;
 	}
