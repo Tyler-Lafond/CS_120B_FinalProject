@@ -201,7 +201,7 @@ void tickDisplay() {
 		case Display_Show:
 			LCD_ClearScreen();
 		//	LCD_Cursor(1);
-			LCD_DisplayString(1, hSPD);
+			LCD_DisplayString(1, vSPD);
 			if (vSpeed < 0) {
 				LCD_DisplayString(6, neg);
 				LCD_Cursor(7);
