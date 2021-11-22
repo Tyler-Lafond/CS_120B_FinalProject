@@ -109,8 +109,8 @@ void tickDisplay() {
 		case Display_Show:
 			LCD_ClearScreen();
 		//	LCD_Cursor(1);
-			LCD_DisplayString(1, vSPD);
-			if (/*vSpeed < */0) {
+			/*LCD_DisplayString(1, vSPD);
+			if (vSpeed < 0) {
 				LCD_DisplayString(7, neg);
 				LCD_Cursor(8);
 				LCD_WriteData((vSpeed * -1) + '0');
@@ -127,7 +127,7 @@ void tickDisplay() {
 					LCD_WriteData(iPrint + '0');
 					itr++;
 				}
-			}
+			}*/
 			//LCD_Cursor(17);
 			LCD_DisplayString(17, hSPD);
 			if (hSpeed < 0) {
