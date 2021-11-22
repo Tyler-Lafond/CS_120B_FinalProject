@@ -190,7 +190,7 @@ int main(void) {
     /* Insert your solution below */
 	ADC_init();
 	LCD_init();
-	TimerSet(1000);
+	TimerSet(100);
 	TimerOn();
 	ReadSpeed_state = ReadSpeed_SMStart;
 	Display_state = Display_SMStart;
@@ -198,6 +198,7 @@ int main(void) {
 //	LCD_DisplayString(1, vSPD);
 	while (1) {
 		tickReadSpeed();
+		tickSpeed();
 		tickDisplay();
 		while(!TimerFlag);
 		TimerFlag = 0;
