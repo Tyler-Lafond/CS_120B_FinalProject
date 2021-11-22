@@ -57,7 +57,7 @@ void tickReadSpeed() {
 	switch(ReadSpeed_state)
 	{
 		case ReadSpeed_Read:
-			ADMUX = 0x09;
+			ADMUX = 0x10;
 			vPort = ADC;
 			hPort = ADC;
 			break;
