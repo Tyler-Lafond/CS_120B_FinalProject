@@ -59,11 +59,11 @@ void tickReadSpeed() {
 		case ReadSpeed_Read:
 			ADCSRA |= (1 << ADSC);
 			ADMUX = 0x00;
-			vPort = ADC;
+			hPort = ADC;
 			delay_ms(1);
 			ADCSRA |= (1 << ADSC);
 			ADMUX |= (1 << MUX0);
-			hPort = ADC;
+			vPort = ADC;
 			break;
 		default:
 			break;
