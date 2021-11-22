@@ -129,16 +129,16 @@ void tickDisplay() {
 				}
 			}*/
 			//LCD_Cursor(17);
-			LCD_DisplayString(17, hSPD);
+			//LCD_DisplayString(17, hSPD);
 			if (/*hSpeed < */0) {
-				//LCD_DisplayString(23, neg);
-				//LCD_Cursor(24);
-				//LCD_WriteData((hSpeed * -1) + '0');
+				LCD_DisplayString(23, neg);
+				LCD_Cursor(24);
+				LCD_WriteData((hSpeed * -1) + '0');
 			}
 			else
 			{
 				//LCD_Cursor(23);
-				itr = 23;
+				itr = 17;
 				while(!hPort)
 				{
 					iPrint = hPort % 10;
