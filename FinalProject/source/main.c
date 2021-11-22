@@ -69,6 +69,7 @@ void tickReadSpeed() {
 
 enum Speed_states { Speed_SMStart, Speed_Convert } Speed_state;
 void tickSpeed() {
+	deg = MAX/11;
 	switch(Speed_state)
 	{
 		case Speed_SMStart:
@@ -84,7 +85,6 @@ void tickSpeed() {
 
 	switch(Speed_state)
 	{
-		deg = MAX/11;
 		case Speed_Convert:
 			if (vPort >= (deg*10))
 			{
