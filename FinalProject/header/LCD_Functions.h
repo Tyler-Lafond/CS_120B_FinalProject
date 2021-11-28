@@ -1,15 +1,15 @@
-#include <Arduino.h>
+#include "Arduino.h"
 
 /* Pin definitions:
 Most of these pins can be moved to any digital or analog pin.
 DN(MOSI)and SCLK should be left where they are (SPI pins). The
 LED (backlight) pin should remain on a PWM-capable pin. */
-const int scePin = 7;   // SCE - Chip select, pin 3 on LCD.
-const int rstPin = 6;   // RST - Reset, pin 4 on LCD.
-const int dcPin = 5;    // DC - Data/Command, pin 5 on LCD.
-const int sdinPin = 11;  // DN(MOSI) - Serial data, pin 6 on LCD.
-const int sclkPin = 13;  // SCLK - Serial clock, pin 7 on LCD.
-const int blPin = 9;    // LED - Backlight LED, pin 8 on LCD.
+const int scePin = 1;   // SCE - Chip select, pin 3 on LCD.
+const int rstPin = 9;   // RST - Reset, pin 4 on LCD.
+const int dcPin = 2;    // DC - Data/Command, pin 5 on LCD.
+const int sdinPin = 6;  // DN(MOSI) - Serial data, pin 6 on LCD.
+const int sclkPin = 8;  // SCLK - Serial clock, pin 7 on LCD.
+const int blPin = 14;    // LED - Backlight LED, pin 8 on LCD.
 
 /* PCD8544-specific defines: */
 #define LCD_COMMAND  0
@@ -218,6 +218,7 @@ void setPixel(int x, int y, boolean bw)
 }
 
 // Because I keep forgetting to put bw variable in when setting...
+/*
 void setPixel(int x, int y)
 {
   setPixel(x, y, BLACK); // Call setPixel with bw set to Black
@@ -227,6 +228,7 @@ void clearPixel(int x, int y)
 {
   setPixel(x, y, WHITE); // call setPixel with bw set to white
 }
+*/
 
 // setLine draws a line from x0,y0 to x1,y1 with the set color.
 // This function was grabbed from the SparkFun ColorLCDShield

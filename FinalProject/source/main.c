@@ -11,6 +11,7 @@
 #ifdef _SIMULATE_
 #include "simAVRHeader.h"
 #include "timer.h"
+#include "io.h"
 #include "LCD_Functions.h"
 #endif
 
@@ -23,14 +24,16 @@ unsigned short temp;
 char vSpeed, hSpeed;
 short vPos, hPos;
 unsigned char itr, iPrint;
-unsigned const char vSpd[6] = "vSPD:";
-unsigned const char hSpd[6] = "hSPD:";
-unsigned const char vPos[6] = "vPOS:";
-unsigned const char hPos[6] = "hPOS:";
-unsigned const char negative[1] = "-";
-unsigned const char* vSPD = vSpd;
-unsigned const char* hSPD = hSpd;
-unsigned const char* neg = negative;
+char vSpd[6] = "vSPD:";
+char hSpd[6] = "hSPD:";
+char vPosi[6] = "vPOS:";
+char hPosi[6] = "hPOS:";
+char negative[1] = "-";
+char* vSPD = vSpd;
+char* hSPD = hSpd;
+char* vPOS = vPosi;
+char* hPOS = hPosi;
+char* neg = negative;
 
 
 void ADC_init() {
@@ -202,7 +205,8 @@ void tickPosition() {
 			even = 0;
 			vDist = 0;
 			hDist = 0;
-			rem = 0;
+			vRem = 0;
+			hRem = 0;
 			Position_State = Position_Track;
 			break;
 		case Position_Track:
