@@ -1,7 +1,7 @@
 /*	Author: tlafo001
  *  Partner(s) Name: 
  *	Lab Section: 022
- *	Assignment: Lab # FinalProject  Exercise # 1
+ *	Assignment: Lab # FinalProject  Exercise # 2
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
@@ -11,7 +11,7 @@
 #ifdef _SIMULATE_
 #include "simAVRHeader.h"
 #include "timer.h"
-#include "io.h"
+#include "LCD_Functions.h"
 #endif
 
 unsigned short MAX = 1004;
@@ -25,6 +25,8 @@ short vPos, hPos;
 unsigned char itr, iPrint;
 unsigned const char vSpd[6] = "vSPD:";
 unsigned const char hSpd[6] = "hSPD:";
+unsigned const char vPos[6] = "vPOS:";
+unsigned const char hPos[6] = "hPOS:";
 unsigned const char negative[1] = "-";
 unsigned const char* vSPD = vSpd;
 unsigned const char* hSPD = hSpd;
@@ -184,6 +186,76 @@ void tickSpeed() {
 			break;
 	}
 }
+
+enum Position_States { Position_SMStart, Position_Track } Position_State;
+void tickPosition() {
+	static unsigned char even;
+	static unsigned char vDist;
+	static unsigned char hDist;
+	static unsigned char vRem;
+	static unsigned char hRem;
+	switch(Position_State)
+	{
+		case Position_SMStart:
+			vPos = 0;
+			hPos = 0;
+			even = 0;
+			vDist = 0;
+			hDist = 0;
+			rem = 0;
+			Position_State = Position_Track;
+			break;
+		case Position_Track:
+			break;
+		default:
+			Position_State = Position_SMStart;
+			break;
+	}
+
+	switch(Position_State)
+	{
+		case Position_Track:
+			vDist += vSpeed;
+			hDist += hSpeed;
+
+			if(even)
+			{
+				vPos += (vDist / 2) + vRem;
+				hPos += (hDist / 2) + hRem;
+
+				if(vPos > 50)
+				{
+					vPos = 50;
+				}
+				else if(vPos < -50)
+				{
+					vPos = -50;
+				}
+
+				if(hPos > 50)
+				{
+					hPos = 50;
+				}
+				else if(hPos < -50)
+				{
+					hPos = -50;
+				}
+
+				vRem = vDist % 2;
+				hRem = hDist % 2;
+				vDist = 0;
+				hDist = 0;
+				even = 0;
+			}
+			else
+			{
+				even = 1;
+			}
+			break;
+		default:
+			break;
+	}
+}
 enum Display_states { Display_SMStart, Display_Show } Display_state;
 void tickDisplay() {
 	switch(Display_state)
@@ -202,30 +274,49 @@ void tickDisplay() {
 	switch(Display_state)
 	{
 		case Display_Show:
-			LCD_ClearScreen();
-		//	LCD_Cursor(1);
-			LCD_DisplayString(1, vSPD);
+			clearDisplay(WHITE);
+			setStr(vSPD, 0, 0, BLACK);
 			if (vSpeed < 0) {
-				LCD_DisplayString(6, neg);
-				LCD_Cursor(7);
-				LCD_WriteData((vSpeed * -1) + '0');
+				setStr(neg, 36, 0, BLACK);
+				setChar((vSpeed * -1) + '0', 42, 0, BLACK);
 			}
 			else
 			{
-				LCD_Cursor(6);
-				LCD_WriteData(vSpeed + '0');
+				setChar(vSpeed + '0', 36, 0, BLACK);
 			}
-			//LCD_Cursor(17);
-			LCD_DisplayString(17, hSPD);
+
+			setStr(hSPD, 0, 8, BLACK);
 			if (hSpeed < 0) {
-				LCD_DisplayString(22, neg);
-				LCD_Cursor(23);
-				LCD_WriteData((hSpeed * -1) + '0');
+				setStr(neg, 36, 8, BLACK);
+				setChar((hSpeed * -1) + '0', 42, 8, BLACK);
 			}
 			else
 			{
-				LCD_Cursor(22);
-				LCD_WriteData(hSpeed + '0');
+				setChar(hSpeed + '0', 36, 8, BLACK);
+			}
+
+			setStr(vPOS, 0, 32, BLACK);
+			if (vPos < 0) {
+				setStr(neg, 36, 32, BLACK);
+				if (((vPos * -1) / 10) != 0) {
+					setChar(((vPos * -1) / 10) + '0', 42, 32, BLACK);
+					setChar(((vPos * -1) % 10) + '0', 48, 32, BLACK);
+				}
+				else {
+					setChar(((vPos * -1) % 10) + '0', 42, 32, BLACK);
+				}
+			}
+
+			setStr(hPOS, 0, 32, BLACK);
+			if (hPos < 0) {
+				setStr(neg, 36, 32, BLACK);
+				if (((hPos * -1) / 10) != 0) {
+					setChar(((hPos * -1) / 10) + '0', 42, 32, BLACK);
+					setChar(((hPos * -1) % 10) + '0', 48, 32, BLACK);
+				}
+				else {
+					setChar(((hPos * -1) % 10) + '0', 42, 32, BLACK);
+				}
 			}
 			break;
 		default:
@@ -264,12 +355,12 @@ void tickTest() {
 int main(void) {
     /* Insert DDR and PORT initializations */
 	DDRA = 0x00; PORTA = 0xFF;
-	DDRC = 0xFF; PORTC = 0x00;
+	DDRB = 0xFF; PORTB = 0x00;
 	DDRD = 0xFF; PORTD = 0x00;
     /* Insert your solution below */
 	ADC_init();
-	LCD_init();
-	TimerSet(1000);
+	lcdBegin();
+	TimerSet(500);
 	TimerOn();
 	ReadSpeed_state = ReadSpeed_SMStart;
 	Display_state = Display_SMStart;
@@ -277,6 +368,7 @@ int main(void) {
 	while (1) {
 		tickReadSpeed();
 		tickSpeed();
+		tickPosition();
 		tickDisplay();
 		while(!TimerFlag);
 		TimerFlag = 0;
