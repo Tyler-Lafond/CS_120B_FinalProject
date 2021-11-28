@@ -1,14 +1,15 @@
+#include <Arduino.h>
 
 /* Pin definitions:
 Most of these pins can be moved to any digital or analog pin.
 DN(MOSI)and SCLK should be left where they are (SPI pins). The
 LED (backlight) pin should remain on a PWM-capable pin. */
-const int scePin = 1;   // SCE - Chip select, pin 3 on LCD.
-const int rstPin = 9;   // RST - Reset, pin 4 on LCD.
-const int dcPin = 2;    // DC - Data/Command, pin 5 on LCD.
-const int sdinPin = 6;  // DN(MOSI) - Serial data, pin 6 on LCD.
-const int sclkPin = 8;  // SCLK - Serial clock, pin 7 on LCD.
-const int blPin = 14;    // LED - Backlight LED, pin 8 on LCD.
+const int scePin = 7;   // SCE - Chip select, pin 3 on LCD.
+const int rstPin = 6;   // RST - Reset, pin 4 on LCD.
+const int dcPin = 5;    // DC - Data/Command, pin 5 on LCD.
+const int sdinPin = 11;  // DN(MOSI) - Serial data, pin 6 on LCD.
+const int sclkPin = 13;  // SCLK - Serial clock, pin 7 on LCD.
+const int blPin = 9;    // LED - Backlight LED, pin 8 on LCD.
 
 /* PCD8544-specific defines: */
 #define LCD_COMMAND  0
@@ -25,7 +26,7 @@ This table contains the hex values that represent pixels for a
 font that is 5 pixels wide and 8 pixels high. Each byte in a row
 represents one, 8-pixel, vertical column of a character. 5 bytes
 per character. */
-static const char ASCII[][5] PROGMEM = {
+static const byte ASCII[][5] PROGMEM = {
   // First 32 characters (0x00-0x19) are ignored. These are
   // non-displayable, control characters.
    {0x00, 0x00, 0x00, 0x00, 0x00} // 0x20
@@ -140,7 +141,7 @@ to the PCD8544.
 
 Because the PCD8544 won't let us write individual pixels at a
 time, this is how we can make targeted changes to the display. */
-char displayMap[LCD_WIDTH * LCD_HEIGHT / 8] = {
+byte displayMap[LCD_WIDTH * LCD_HEIGHT / 8] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // (0,0)->(11,7) ~ These 12 bytes cover an 8x12 block in the left corner of the display
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // (12,0)->(23,7)
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xE0, // (24,0)->(35,7)
@@ -188,7 +189,7 @@ char displayMap[LCD_WIDTH * LCD_HEIGHT / 8] = {
 // There are two memory banks in the LCD, data/RAM and commands.
 // This function sets the DC pin high or low depending, and then
 // sends the data byte
-void LCDWrite(char data_or_command, char data)
+void LCDWrite(byte data_or_command, byte data)
 {
   //Tell the LCD that we are writing either to data or a command
   digitalWrite(dcPin, data_or_command);
@@ -202,7 +203,7 @@ void LCDWrite(char data_or_command, char data)
 
 // This function sets a pixel on displayMap to your preferred
 // color. 1=Black, 0= white.
-void setPixel(int x, int y, bool bw)
+void setPixel(int x, int y, boolean bw)
 {
   // First, double check that the coordinate is in range.
   if ((x >= 0) && (x < LCD_WIDTH) && (y >= 0) && (y < LCD_HEIGHT))
@@ -230,7 +231,7 @@ void clearPixel(int x, int y)
 // setLine draws a line from x0,y0 to x1,y1 with the set color.
 // This function was grabbed from the SparkFun ColorLCDShield
 // library.
-void setLine(int x0, int y0, int x1, int y1, bool bw)
+void setLine(int x0, int y0, int x1, int y1, boolean bw)
 {
   int dy = y1 - y0; // Difference between y0 and y1
   int dx = x1 - x0; // Difference between x0 and x1
@@ -293,7 +294,7 @@ void setLine(int x0, int y0, int x1, int y1, bool bw)
 // parameter, and colored with bw.
 // This function was grabbed from the SparkFun ColorLCDShield
 // library.
-void setRect(int x0, int y0, int x1, int y1, bool fill, bool bw)
+void setRect(int x0, int y0, int x1, int y1, boolean fill, boolean bw)
 {
   // check if the rectangle is to be filled
   if (fill == 1)
@@ -332,7 +333,7 @@ void setRect(int x0, int y0, int x1, int y1, bool fill, bool bw)
 // thickness ranging from 1 to the radius of the circle.
 // This function was grabbed from the SparkFun ColorLCDShield
 // library.
-void setCircle (int x0, int y0, int radius, bool bw, int lineThickness)
+void setCircle (int x0, int y0, int radius, boolean bw, int lineThickness)
 {
   for(int r = 0; r < lineThickness; r++)
   {
@@ -375,7 +376,7 @@ void setCircle (int x0, int y0, int radius, bool bw, int lineThickness)
 // This function will draw a char (defined in the ASCII table
 // near the beginning of this sketch) at a defined x and y).
 // The color can be either black (1) or white (0).
-void setChar(char character, int x, int y, bool bw)
+void setChar(char character, int x, int y, boolean bw)
 {
   byte column; // temp byte to store character's column bitmap
   for (int i=0; i<5; i++) // 5 columns (x) per character
@@ -395,7 +396,7 @@ void setChar(char character, int x, int y, bool bw)
 // progressive coordinates until it's done.
 // This function was grabbed from the SparkFun ColorLCDShield
 // library.
-void setStr(char * dString, int x, int y, bool bw)
+void setStr(char * dString, int x, int y, boolean bw)
 {
   while (*dString != 0x00) // loop until null terminator
   {
@@ -430,7 +431,7 @@ void setBitmap(const char * bitArray)
 // This function clears the entire display either white (0) or
 // black (1).
 // The screen won't actually clear until you call updateDisplay()!
-void clearDisplay(bool bw)
+void clearDisplay(boolean bw)
 {
   for (int i=0; i<(LCD_WIDTH * LCD_HEIGHT / 8); i++)
   {
@@ -462,7 +463,7 @@ void updateDisplay()
 
 // Set contrast can set the LCD Vop to a value between 0 and 127.
 // 40-60 is usually a pretty good range.
-void setContrast(char contrast)
+void setContrast(byte contrast)
 {
   LCDWrite(LCD_COMMAND, 0x21); //Tell LCD that extended commands follow
   LCDWrite(LCD_COMMAND, 0x80 | contrast); //Set LCD Vop (Contrast): Try 0xB1(good @ 3.3V) or 0xBF if your display is too dark
