@@ -1,4 +1,5 @@
 #include "Arduino.h"
+#include "io.h"
 
 /* Pin definitions:
 Most of these pins can be moved to any digital or analog pin.
@@ -196,7 +197,8 @@ void LCDWrite(byte data_or_command, byte data)
 
   //Send the data
   digitalWrite(scePin, LOW);
-  SPI.transfer(data); //shiftOut(sdinPin, sclkPin, MSBFIRST, data);
+  SPDR = data; //shiftOut(sdinPin, sclkPin, MSBFIRST, data);
+  while(!(SPSR & (1<<SPIF)));
   digitalWrite(scePin, HIGH);
 }
 
@@ -337,7 +339,8 @@ void setRect(int x0, int y0, int x1, int y1, boolean fill, boolean bw)
 // library.
 void setCircle (int x0, int y0, int radius, boolean bw, int lineThickness)
 {
-  for(int r = 0; r < lineThickness; r++)
+  int r = 0;
+  while(r < lineThickness)
   {
     int f = 1 - radius;
     int ddF_x = 0;
@@ -372,6 +375,7 @@ void setCircle (int x0, int y0, int radius, boolean bw, int lineThickness)
       setPixel(x0 - y, y0 - x, bw);
     }
     radius--;
+    r++;
   }
 }
 
@@ -381,16 +385,20 @@ void setCircle (int x0, int y0, int radius, boolean bw, int lineThickness)
 void setChar(char character, int x, int y, boolean bw)
 {
   byte column; // temp byte to store character's column bitmap
-  for (int i=0; i<5; i++) // 5 columns (x) per character
+  int i = 0;
+  while (i<5) // 5 columns (x) per character
   {
     column = pgm_read_byte(&ASCII[character - 0x20][i]);
-    for (int j=0; j<8; j++) // 8 rows (y) per character
+    int j = 0;
+    while (j<8) // 8 rows (y) per character
     {
       if (column & (0x01 << j)) // test bits to set pixels
         setPixel(x+i, y+j, bw);
       else
         setPixel(x+i, y+j, !bw);
+      j++;
     }
+    i++;
   }
 }
 
@@ -404,9 +412,11 @@ void setStr(char * dString, int x, int y, boolean bw)
   {
     setChar(*dString++, x, y, bw);
     x+=5;
-    for (int i=y; i<y+8; i++)
+    int i = y;
+    while (i<y+8)
     {
       setPixel(x, i, !bw);
+      i++;
     }
     x++;
     if (x > (LCD_WIDTH - 5)) // Enables wrap around
@@ -423,10 +433,12 @@ void setStr(char * dString, int x, int y, boolean bw)
 // Also, the array must reside in FLASH and declared with PROGMEM.
 void setBitmap(const char * bitArray)
 {
-  for (int i=0; i<(LCD_WIDTH * LCD_HEIGHT / 8); i++)
+  int i = 0;
+  while (i<(LCD_WIDTH * LCD_HEIGHT / 8))
   {
     char c = pgm_read_byte(&bitArray[i]);
     displayMap[i] = c;
+    i++;
   }
 }
 
@@ -435,12 +447,14 @@ void setBitmap(const char * bitArray)
 // The screen won't actually clear until you call updateDisplay()!
 void clearDisplay(boolean bw)
 {
-  for (int i=0; i<(LCD_WIDTH * LCD_HEIGHT / 8); i++)
+  int i = 0;
+  while (i<(LCD_WIDTH * LCD_HEIGHT / 8))
   {
     if (bw)
       displayMap[i] = 0xFF;
     else
       displayMap[i] = 0;
+    i++;
   }
 }
 
@@ -457,9 +471,11 @@ void gotoXY(int x, int y)
 void updateDisplay()
 {
   gotoXY(0, 0);
-  for (int i=0; i < (LCD_WIDTH * LCD_HEIGHT / 8); i++)
+  int i = 0;
+  while (i < (LCD_WIDTH * LCD_HEIGHT / 8))
   {
     LCDWrite(LCD_DATA, displayMap[i]);
+    i++;
   }
 }
 
@@ -484,9 +500,11 @@ void invertDisplay()
   LCDWrite(LCD_COMMAND, 0x20); //Set display mode  */
 
   /* Indirect, swap bits in displayMap option: */
-  for (int i=0; i < (LCD_WIDTH * LCD_HEIGHT / 8); i++)
+  int i = 0;
+  while (i < (LCD_WIDTH * LCD_HEIGHT / 8))
   {
     displayMap[i] = ~displayMap[i] & 0xFF;
+    i++;
   }
   updateDisplay();
 }
@@ -503,9 +521,8 @@ void lcdBegin(void)
   pinMode(blPin, OUTPUT);
   analogWrite(blPin, 255);
 
-  SPI.begin();
-  SPI.setDataMode(SPI_MODE0);
-  SPI.setBitOrder(MSBFIRST);
+  SPCR |= (1<<SPE) | (1<<MSTR) | (1<<SPR0);
+  SPCR &= ~(1<<CPOL) | ~(1<<CPHA) | ~(1<<DORD);
 
   //Reset the LCD to a known state
   digitalWrite(rstPin, LOW);
