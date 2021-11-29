@@ -278,7 +278,7 @@ void tickDisplay() {
 	switch(Display_state)
 	{
 		case Display_Show:
-			clearDisplay(BLACK);
+			clearDisplay(WHITE);
 			setStr(vSPD, 0, 0, BLACK);
 			if (vSpeed < 0) {
 				setStr(neg, 36, 0, BLACK);
