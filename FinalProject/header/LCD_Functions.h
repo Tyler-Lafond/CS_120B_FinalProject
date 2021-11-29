@@ -204,7 +204,7 @@ void LCDWrite(byte data_or_command, byte data)
   //shiftOut(sdinPin, sclkPin, MSBFIRST, data)
   while(!(SPSR & (1<<SPIF)));
   digitalWrite(scePin, HIGH);
-  delay_ms(1);
+ // delay_ms(1);
 }
 
 
