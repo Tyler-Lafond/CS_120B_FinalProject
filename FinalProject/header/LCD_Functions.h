@@ -525,7 +525,7 @@ void lcdBegin(void)
   pinMode(sclkPin, OUTPUT);
   pinMode(blPin, OUTPUT);
   //DDRB = (1<<PB1) | (1<<PB4) | (1<<PB5) | (1<<PB7);
-  PORTB |= (1<<PB4);
+  //PORTB |= (1<<PB4);
   //DDRD = (1<<PD0) | (1<<PD4);
   analogWrite(blPin, 255);
 
