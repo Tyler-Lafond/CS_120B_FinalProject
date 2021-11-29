@@ -201,7 +201,7 @@ void LCDWrite(byte data_or_command, byte data)
   digitalWrite(scePin, LOW);
   SPDR = data;
   asm volatile("nop"); 
-  //SPI.transfer(data)
+  //SPI.transfer(data) //SPI.h repurposed to work with c
   //shiftOut(sdinPin, sclkPin, MSBFIRST, data)
   while(!(SPSR & (1<<SPIF)));
   digitalWrite(scePin, HIGH);
@@ -525,6 +525,8 @@ void lcdBegin(void)
   pinMode(sdinPin, OUTPUT);
   pinMode(sclkPin, OUTPUT);
   pinMode(blPin, OUTPUT);
+
+  //Attempts to manually drive the LCD using ATMega
   //DDRB = (1<<PB1) | (1<<PB4) | (1<<PB5) | (1<<PB7);
   //PORTB |= (1<<PB4);
   //DDRD = (1<<PD0) | (1<<PD4);
@@ -533,7 +535,7 @@ void lcdBegin(void)
   SPCR |= (1<<SPE) | (1<<MSTR) | (1<<SPI2X) | (1<<SPR0);
   SPCR &= ~((1<<CPOL) | (1<<CPHA) | (1<<DORD));
 
-  //SPI.begin();
+  //SPI.begin(); //SPI.h Repurposed to work with c
   //SPI.setDataMode(SPI_MODE0);
   //SPI.setBitOrder(MSBFIRST);
   //Reset the LCD to a known state
@@ -541,9 +543,9 @@ void lcdBegin(void)
   digitalWrite(rstPin, HIGH);
 
   LCDWrite(LCD_COMMAND, 0x21); //Tell LCD extended commands follow
-  LCDWrite(LCD_COMMAND, 0xFF); //Set LCD Vop (Contrast)
+  LCDWrite(LCD_COMMAND, 0x80); //Set LCD Vop (Contrast)
   LCDWrite(LCD_COMMAND, 0x04); //Set Temp coefficent
-  LCDWrite(LCD_COMMAND, 0x15); //LCD bias mode 1:48 (try 0x13)
+  LCDWrite(LCD_COMMAND, 0x14); //LCD bias mode 1:48 (try 0x13)
   //We must send 0x20 before modifying the display control mode
   LCDWrite(LCD_COMMAND, 0x20);
   LCDWrite(LCD_COMMAND, 0x0C); //Set display control, normal mode.

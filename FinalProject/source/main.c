@@ -366,7 +366,7 @@ int main(void) {
     /* Insert your solution below */
 	ADC_init();
 	lcdBegin();
-	TimerSet(2000);
+	TimerSet(500);
 	TimerOn();
 	ReadSpeed_state = ReadSpeed_SMStart;
 	Speed_state = Speed_SMStart;
