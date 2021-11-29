@@ -190,14 +190,14 @@ void tickSpeed() {
 	}
 }
 
-enum Position_States { Position_SMStart, Position_Track } Position_State;
+enum Position_States { Position_SMStart, Position_Track } Position_state;
 void tickPosition() {
 	static unsigned char even;
 	static unsigned char vDist;
 	static unsigned char hDist;
 	static unsigned char vRem;
 	static unsigned char hRem;
-	switch(Position_State)
+	switch(Position_state)
 	{
 		case Position_SMStart:
 			vPos = 0;
@@ -207,16 +207,16 @@ void tickPosition() {
 			hDist = 0;
 			vRem = 0;
 			hRem = 0;
-			Position_State = Position_Track;
+			Position_state = Position_Track;
 			break;
 		case Position_Track:
 			break;
 		default:
-			Position_State = Position_SMStart;
+			Position_state = Position_SMStart;
 			break;
 	}
 
-	switch(Position_State)
+	switch(Position_state)
 	{
 		case Position_Track:
 			vDist += vSpeed;
@@ -367,6 +367,8 @@ int main(void) {
 	TimerSet(500);
 	TimerOn();
 	ReadSpeed_state = ReadSpeed_SMStart;
+	Speed_state = Speed_SMStart;
+	Position_state = Position_SMStart;
 	Display_state = Display_SMStart;
 //	Test_state = Test_SMStart;
 	while (1) {
