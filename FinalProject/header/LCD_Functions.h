@@ -535,6 +535,7 @@ void lcdBegin(void)
   //We must send 0x20 before modifying the display control mode
   LCDWrite(LCD_COMMAND, 0x20);
   LCDWrite(LCD_COMMAND, 0x0C); //Set display control, normal mode.
+  LCDWrite(LCD_COMMAND, 0x09);
 }
 
 
