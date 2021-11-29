@@ -278,7 +278,7 @@ void tickDisplay() {
 	switch(Display_state)
 	{
 		case Display_Show:
-			//clearDisplay(WHITE);
+			clearDisplay(WHITE);
 			setStr(vSPD, 0, 0, BLACK);
 			if (vSpeed < 0) {
 				setStr(neg, 36, 0, BLACK);
@@ -367,8 +367,8 @@ int main(void) {
 	TimerSet(500);
 	TimerOn();
 	ReadSpeed_state = ReadSpeed_SMStart;
-//	Speed_state = Speed_SMStart;
-//	Position_state = Position_SMStart;
+	Speed_state = Speed_SMStart;
+	Position_state = Position_SMStart;
 	Display_state = Display_SMStart;
 //	Test_state = Test_SMStart;
 	while (1) {

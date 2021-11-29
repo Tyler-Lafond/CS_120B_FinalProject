@@ -200,7 +200,7 @@ void LCDWrite(byte data_or_command, byte data)
   digitalWrite(scePin, LOW);
   SPDR = data; 
   //SPI.transfer(data)
-  //shiftOut(sdinPin, sclkPin, MSBFIRST, data);
+  //shiftOut(sdinPin, sclkPin, MSBFIRST, data)
   while(!(SPSR & (1<<SPIF)));
   digitalWrite(scePin, HIGH);
 }
@@ -516,16 +516,18 @@ void invertDisplay()
 void lcdBegin(void)
 {
   //Configure control pins
-  pinMode(scePin, OUTPUT);
-  pinMode(rstPin, OUTPUT);
-  pinMode(dcPin, OUTPUT);
-  pinMode(sdinPin, OUTPUT);
-  pinMode(sclkPin, OUTPUT);
-  pinMode(blPin, OUTPUT);
+  //pinMode(scePin, OUTPUT);
+  //pinMode(rstPin, OUTPUT);
+  //pinMode(dcPin, OUTPUT);
+  //pinMode(sdinPin, OUTPUT);
+  //pinMode(sclkPin, OUTPUT);
+  //pinMode(blPin, OUTPUT);
+  DDRB = (1<<PB0) | (1<<PB1) | (1<<PB5) | (1<<PB7);
+  DDRD = (1<<PD0) | (1<<PD4);
   analogWrite(blPin, 255);
 
-  SPCR |= (1<<SPE) | (1<<MSTR) | (1<<SPI2) | (1<<SPR0);
-  SPCR &= ~((1<<CPOL) | (1<<CPHA) | (1<<DORD));
+  //SPCR |= (1<<SPE) | (1<<MSTR) | (1<<SPI2) | (1<<SPR0);
+  //SPCR &= ~((1<<CPOL) | (1<<CPHA) | (1<<DORD));
 
   //SPI.begin();
   //SPI.setDataMode(SPI_MODE0);
