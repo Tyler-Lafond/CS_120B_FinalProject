@@ -367,8 +367,8 @@ int main(void) {
 	TimerSet(1000);
 	TimerOn();
 	ReadSpeed_state = ReadSpeed_SMStart;
-	Speed_state = Speed_SMStart;
-	Position_state = Position_SMStart;
+//	Speed_state = Speed_SMStart;
+//	Position_state = Position_SMStart;
 	Display_state = Display_SMStart;
 //	Test_state = Test_SMStart;
 	while (1) {
