@@ -198,7 +198,8 @@ void LCDWrite(byte data_or_command, byte data)
 
   //Send the data
   digitalWrite(scePin, LOW);
-  SPDR = data; 
+  SPDR = data;
+  asm volatile("nop"); 
   //SPI.transfer(data)
   //shiftOut(sdinPin, sclkPin, MSBFIRST, data)
   while(!(SPSR & (1<<SPIF)));
@@ -517,15 +518,15 @@ void invertDisplay()
 void lcdBegin(void)
 {
   //Configure control pins
-  //pinMode(scePin, OUTPUT);
-  //pinMode(rstPin, OUTPUT);
-  //pinMode(dcPin, OUTPUT);
-  //pinMode(sdinPin, OUTPUT);
-  //pinMode(sclkPin, OUTPUT);
-  //pinMode(blPin, OUTPUT);
-  DDRB = (1<<PB1) | (1<<PB4) | (1<<PB5) | (1<<PB7);
+  pinMode(scePin, OUTPUT);
+  pinMode(rstPin, OUTPUT);
+  pinMode(dcPin, OUTPUT);
+  pinMode(sdinPin, OUTPUT);
+  pinMode(sclkPin, OUTPUT);
+  pinMode(blPin, OUTPUT);
+  //DDRB = (1<<PB1) | (1<<PB4) | (1<<PB5) | (1<<PB7);
   PORTB |= (1<<PB4);
-  DDRD = (1<<PD0) | (1<<PD4);
+  //DDRD = (1<<PD0) | (1<<PD4);
   analogWrite(blPin, 255);
 
   SPCR |= (1<<SPE) | (1<<MSTR) | (1<<SPI2X) | (1<<SPR0);
@@ -539,7 +540,7 @@ void lcdBegin(void)
   digitalWrite(rstPin, HIGH);
 
   LCDWrite(LCD_COMMAND, 0x21); //Tell LCD extended commands follow
-  LCDWrite(LCD_COMMAND, 0xFF); //Set LCD Vop (Contrast)
+  LCDWrite(LCD_COMMAND, 0xB0); //Set LCD Vop (Contrast)
   LCDWrite(LCD_COMMAND, 0x04); //Set Temp coefficent
   LCDWrite(LCD_COMMAND, 0x13); //LCD bias mode 1:48 (try 0x13)
   //We must send 0x20 before modifying the display control mode
