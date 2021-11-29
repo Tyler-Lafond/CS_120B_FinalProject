@@ -521,7 +521,7 @@ void lcdBegin(void)
   pinMode(blPin, OUTPUT);
   analogWrite(blPin, 255);
 
-  SPCR |= (1<<SPE) | (1<<MSTR) | (1<<SPR1);
+  SPCR |= (1<<SPE) | (1<<MSTR) | (1<<SPR0);
   SPCR &= ~(1<<CPOL) | ~(1<<CPHA) | ~(1<<DORD);
 
   //Reset the LCD to a known state
@@ -529,7 +529,7 @@ void lcdBegin(void)
   digitalWrite(rstPin, HIGH);
 
   LCDWrite(LCD_COMMAND, 0x21); //Tell LCD extended commands follow
-  LCDWrite(LCD_COMMAND, 0xB0); //Set LCD Vop (Contrast)
+  LCDWrite(LCD_COMMAND, 0x8F); //Set LCD Vop (Contrast)
   LCDWrite(LCD_COMMAND, 0x04); //Set Temp coefficent
   LCDWrite(LCD_COMMAND, 0x13); //LCD bias mode 1:48 (try 0x13)
   //We must send 0x20 before modifying the display control mode
