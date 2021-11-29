@@ -521,7 +521,7 @@ void lcdBegin(void)
   pinMode(blPin, OUTPUT);
   analogWrite(blPin, 255);
 
-  SPCR |= (1<<SPE) | (1<<MSTR) | (1<<SPR0);
+  SPCR |= (1<<SPE) | (1<<MSTR) | (1<<SPR1);
   SPCR &= ~(1<<CPOL) | ~(1<<CPHA) | ~(1<<DORD);
 
   //Reset the LCD to a known state
