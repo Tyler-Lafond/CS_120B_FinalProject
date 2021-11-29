@@ -198,10 +198,10 @@ void LCDWrite(byte data_or_command, byte data)
 
   //Send the data
   digitalWrite(scePin, LOW);
- // SPDR = data; 
+  SPDR = data; 
   //SPI.transfer(data)
-  shiftOut(sdinPin, sclkPin, MSBFIRST, data);
-  //while(!(SPSR & (1<<SPIF)));
+  //shiftOut(sdinPin, sclkPin, MSBFIRST, data);
+  while(!(SPSR & (1<<SPIF)));
   digitalWrite(scePin, HIGH);
 }
 
@@ -524,8 +524,8 @@ void lcdBegin(void)
   pinMode(blPin, OUTPUT);
   analogWrite(blPin, 255);
 
- // SPCR |= (1<<SPE) | (1<<MSTR) | (1<<SPR0);
- // SPCR &= ~(1<<CPOL) | ~(1<<CPHA) | ~(1<<DORD);
+  SPCR |= (1<<SPE) | (1<<MSTR) | (1<<SPR0);
+  SPCR &= ~(1<<CPOL) | ~(1<<CPHA) | ~(1<<DORD);
 
   //SPI.begin();
   //SPI.setDataMode(SPI_MODE0);
@@ -537,7 +537,7 @@ void lcdBegin(void)
   LCDWrite(LCD_COMMAND, 0x21); //Tell LCD extended commands follow
   LCDWrite(LCD_COMMAND, 0xB0); //Set LCD Vop (Contrast)
   LCDWrite(LCD_COMMAND, 0x04); //Set Temp coefficent
-  LCDWrite(LCD_COMMAND, 0x16); //LCD bias mode 1:48 (try 0x13)
+  LCDWrite(LCD_COMMAND, 0x13); //LCD bias mode 1:48 (try 0x13)
   //We must send 0x20 before modifying the display control mode
   LCDWrite(LCD_COMMAND, 0x20);
   LCDWrite(LCD_COMMAND, 0x0C); //Set display control, normal mode.
