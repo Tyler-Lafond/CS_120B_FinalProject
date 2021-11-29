@@ -8,7 +8,7 @@ DN(MOSI)and SCLK should be left where they are (SPI pins). The
 LED (backlight) pin should remain on a PWM-capable pin. */
 const int scePin = 1;   // SCE - Chip select, pin 3 on LCD.
 const int rstPin = 2;   // RST - Reset, pin 4 on LCD.
-const int dcPin = 3;    // DC - Data/Command, pin 5 on LCD.
+const int dcPin = 14;    // DC - Data/Command, pin 5 on LCD.
 const int sdinPin = 6;  // DN(MOSI) - Serial data, pin 6 on LCD.
 const int sclkPin = 8;  // SCLK - Serial clock, pin 7 on LCD.
 const int blPin = 4;    // LED - Backlight LED, pin 8 on LCD.
