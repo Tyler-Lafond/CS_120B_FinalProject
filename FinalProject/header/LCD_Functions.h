@@ -6,7 +6,7 @@
 Most of these pins can be moved to any digital or analog pin.
 DN(MOSI)and SCLK should be left where they are (SPI pins). The
 LED (backlight) pin should remain on a PWM-capable pin. */
-const int scePin = 1;   // SCE - Chip select, pin 3 on LCD.
+const int scePin = 5;   // SCE - Chip select, pin 3 on LCD.
 const int rstPin = 2;   // RST - Reset, pin 4 on LCD.
 const int dcPin = 14;    // DC - Data/Command, pin 5 on LCD.
 const int sdinPin = 6;  // DN(MOSI) - Serial data, pin 6 on LCD.
@@ -522,7 +522,8 @@ void lcdBegin(void)
   //pinMode(sdinPin, OUTPUT);
   //pinMode(sclkPin, OUTPUT);
   //pinMode(blPin, OUTPUT);
-  DDRB = (1<<PB0) | (1<<PB1) | (1<<PB5) | (1<<PB7);
+  DDRB = (1<<PB1) | (1<<PB4) | (1<<PB5) | (1<<PB7);
+  PORTB |= (1<<PB4);
   DDRD = (1<<PD0) | (1<<PD4);
   analogWrite(blPin, 255);
 
