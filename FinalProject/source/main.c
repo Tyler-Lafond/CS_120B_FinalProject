@@ -364,7 +364,7 @@ int main(void) {
     /* Insert your solution below */
 	ADC_init();
 	lcdBegin();
-	TimerSet(1000);
+	TimerSet(500);
 	TimerOn();
 	ReadSpeed_state = ReadSpeed_SMStart;
 //	Speed_state = Speed_SMStart;
@@ -373,8 +373,8 @@ int main(void) {
 //	Test_state = Test_SMStart;
 	while (1) {
 		tickReadSpeed();
-		tickSpeed();
-		tickPosition();
+		//tickSpeed();
+		//tickPosition();
 		tickDisplay();
 		while(!TimerFlag);
 		TimerFlag = 0;

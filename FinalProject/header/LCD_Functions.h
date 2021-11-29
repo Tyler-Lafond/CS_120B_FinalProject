@@ -529,7 +529,7 @@ void lcdBegin(void)
   digitalWrite(rstPin, HIGH);
 
   LCDWrite(LCD_COMMAND, 0x21); //Tell LCD extended commands follow
-  LCDWrite(LCD_COMMAND, 0xC8); //Set LCD Vop (Contrast)
+  LCDWrite(LCD_COMMAND, 0xAF); //Set LCD Vop (Contrast)
   LCDWrite(LCD_COMMAND, 0x04); //Set Temp coefficent
   LCDWrite(LCD_COMMAND, 0x14); //LCD bias mode 1:48 (try 0x13)
   //We must send 0x20 before modifying the display control mode
