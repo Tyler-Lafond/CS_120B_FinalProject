@@ -199,7 +199,8 @@ void LCDWrite(byte data_or_command, byte data)
   //Send the data
   digitalWrite(scePin, LOW);
  // SPDR = data; 
-  SPI.transfer(data)//shiftOut(sdinPin, sclkPin, MSBFIRST, data);
+  //SPI.transfer(data)
+  shiftOut(sdinPin, sclkPin, MSBFIRST, data);
   //while(!(SPSR & (1<<SPIF)));
   digitalWrite(scePin, HIGH);
 }
@@ -526,9 +527,9 @@ void lcdBegin(void)
  // SPCR |= (1<<SPE) | (1<<MSTR) | (1<<SPR0);
  // SPCR &= ~(1<<CPOL) | ~(1<<CPHA) | ~(1<<DORD);
 
-  SPI.begin();
-  SPI.setDataMode(SPI_MODE0);
-  SPI.setBitOrder(MSBFIRST);
+  //SPI.begin();
+  //SPI.setDataMode(SPI_MODE0);
+  //SPI.setBitOrder(MSBFIRST);
   //Reset the LCD to a known state
   digitalWrite(rstPin, LOW);
   digitalWrite(rstPin, HIGH);
