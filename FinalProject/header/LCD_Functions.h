@@ -525,7 +525,7 @@ void lcdBegin(void)
   analogWrite(blPin, 255);
 
   SPCR |= (1<<SPE) | (1<<MSTR) | (1<<SPR1);
-  SPCR &= ~(1<<CPOL) | ~(1<<CPHA) | ~(1<<DORD);
+  SPCR &= ~((1<<CPOL) | (1<<CPHA) | (1<<DORD));
 
   //SPI.begin();
   //SPI.setDataMode(SPI_MODE0);
