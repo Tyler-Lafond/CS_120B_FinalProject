@@ -11,7 +11,7 @@ const int rstPin = 2;   // RST - Reset, pin 4 on LCD.
 const int dcPin = 14;    // DC - Data/Command, pin 5 on LCD.
 const int sdinPin = 6;  // DN(MOSI) - Serial data, pin 6 on LCD.
 const int sclkPin = 8;  // SCLK - Serial clock, pin 7 on LCD.
-const int blPin = 4;    // LED - Backlight LED, pin 8 on LCD.
+const int blPin = 18;    // LED - Backlight LED, pin 8 on LCD.
 
 /* PCD8544-specific defines: */
 #define LCD_COMMAND  0
