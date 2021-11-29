@@ -373,8 +373,8 @@ int main(void) {
 //	Test_state = Test_SMStart;
 	while (1) {
 		tickReadSpeed();
-		//tickSpeed();
-		//tickPosition();
+		tickSpeed();
+		tickPosition();
 		tickDisplay();
 		while(!TimerFlag);
 		TimerFlag = 0;

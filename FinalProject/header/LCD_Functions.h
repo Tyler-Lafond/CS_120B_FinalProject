@@ -1,6 +1,6 @@
 #include "Arduino.h"
 #include "io.h"
-#include "SPI.h"
+//#include "SPI.h"
 
 /* Pin definitions:
 Most of these pins can be moved to any digital or analog pin.
