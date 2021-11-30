@@ -519,17 +519,17 @@ void invertDisplay()
 void lcdBegin(void)
 {
   //Configure control pins
-  pinMode(scePin, OUTPUT);
+  /*pinMode(scePin, OUTPUT);
   pinMode(rstPin, OUTPUT);
   pinMode(dcPin, OUTPUT);
   pinMode(sdinPin, OUTPUT);
   pinMode(sclkPin, OUTPUT);
-  pinMode(blPin, OUTPUT);
+  pinMode(blPin, OUTPUT);*/
 
   //Attempts to manually drive the LCD using ATMega
-  //DDRB = (1<<PB1) | (1<<PB4) | (1<<PB5) | (1<<PB7);
-  //PORTB |= (1<<PB4);
-  //DDRD = (1<<PD0) | (1<<PD4);
+  DDRB = (1<<PB1) | (1<<PB4) | (1<<PB5) | (1<<PB7);
+  PORTB |= (1<<PB4);
+  DDRD = (1<<PD0) | (1<<PD4);
   analogWrite(blPin, 255);
 
   SPCR |= (1<<SPE) | (1<<MSTR) | (1<<SPR0);
