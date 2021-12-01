@@ -540,6 +540,7 @@ void lcdBegin(void)
   //SPI.setBitOrder(MSBFIRST);
   //Reset the LCD to a known state
   digitalWrite(rstPin, LOW);
+  delay_ms(200);  //100ms low pulse minimum to reset, but using 200 to be safe
   digitalWrite(rstPin, HIGH);
 
   LCDWrite(LCD_COMMAND, 0x21); //Tell LCD extended commands follow
