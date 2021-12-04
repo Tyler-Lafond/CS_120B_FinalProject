@@ -278,7 +278,8 @@ void tickDisplay() {
 	switch(Display_state)
 	{
 		case Display_Show:
-			//clearDisplay(WHITE);
+			clearDisplay(BLACK);
+			updateDisplay();
 			setStr(vSPD, 0, 0, BLACK);
 			if (vSpeed < 0) {
 				setStr(neg, 36, 0, BLACK);
@@ -365,7 +366,7 @@ int main(void) {
     /* Insert your solution below */
 	ADC_init();
 	lcdBegin();
-	TimerSet(1000);
+	TimerSet(500);
 	TimerOn();
 	ReadSpeed_state = ReadSpeed_SMStart;
 	Speed_state = Speed_SMStart;
