@@ -7,7 +7,7 @@
 Most of these pins can be moved to any digital or analog pin.
 DN(MOSI)and SCLK should be left where they are (SPI pins). The
 LED (backlight) pin should remain on a PWM-capable pin. */
-const int scePin = 5;   // SCE - Chip select, pin 3 on LCD.
+const int scePin = 1;   // SCE - Chip select, pin 3 on LCD.
 const int rstPin = 2;   // RST - Reset, pin 4 on LCD.
 const int dcPin = 14;    // DC - Data/Command, pin 5 on LCD.
 const int sdinPin = 6;  // DN(MOSI) - Serial data, pin 6 on LCD.
@@ -546,7 +546,7 @@ void lcdBegin(void)
   LCDWrite(LCD_COMMAND, 0x21); //Tell LCD extended commands follow
   LCDWrite(LCD_COMMAND, 0xB0); //Set LCD Vop (Contrast)
   LCDWrite(LCD_COMMAND, 0x04); //Set Temp coefficent
-  LCDWrite(LCD_COMMAND, 0x14); //LCD bias mode 1:48 (try 0x13)
+  LCDWrite(LCD_COMMAND, 0x13); //LCD bias mode 1:48 (try 0x13)
   //We must send 0x20 before modifying the display control mode
   LCDWrite(LCD_COMMAND, 0x20);
   LCDWrite(LCD_COMMAND, 0x0C); //Set display control, normal mode.
