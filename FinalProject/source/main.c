@@ -278,8 +278,8 @@ void tickDisplay() {
 	switch(Display_state)
 	{
 		case Display_Show:
-			clearDisplay(BLACK);
-			updateDisplay();
+			clearDisplay(WHITE);
+			//updateDisplay();
 			setStr(vSPD, 0, 0, BLACK);
 			if (vSpeed < 0) {
 				setStr(neg, 36, 0, BLACK);
@@ -323,7 +323,7 @@ void tickDisplay() {
 					setChar(((hPos * -1) % 10) + '0', 42, 32, BLACK);
 				}
 			}
-			//updateDisplay();
+			updateDisplay();
 			break;
 		default:
 			break;
