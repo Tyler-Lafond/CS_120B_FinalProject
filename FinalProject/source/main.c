@@ -364,7 +364,6 @@ int main(void) {
 	DDRB = 0xFF; PORTB = 0x00;
 	DDRD = 0xFF; PORTD = 0x00;
     /* Insert your solution below */
-	unsigned char i = 0;
 	ADC_init();
 	lcdBegin();
 	TimerSet(500);
@@ -380,13 +379,6 @@ int main(void) {
 		//tickPosition();
 		//tickDisplay();
 		clearDisplay(WHITE);
-		setContrast(i);
-		if (i >= 126) {
-			i = 0;
-		}
-		else {
-			i++;
-		}
 		gotoXY(0, 0);
 		setChar('B', 0, 0, BLACK);
 		updateDisplay();

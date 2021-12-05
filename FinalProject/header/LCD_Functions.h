@@ -195,16 +195,24 @@ byte displayMap[LCD_WIDTH * LCD_HEIGHT / 8] = {
 void LCDWrite(byte data_or_command, byte data)
 {
   //Tell the LCD that we are writing either to data or a command
-  digitalWrite(dcPin, data_or_command);
+ // digitalWrite(dcPin, data_or_command);
+  if (data_or_command == LCD_DATA) {
+	PORTD |= (1 << PD0);
+  }
+  else if (data_or_command == LCD_COMMAND) {
+	PORTD &= ~(1 << PD0);
+  }
 
   //Send the data
-  digitalWrite(scePin, LOW);
+  //digitalWrite(scePin, LOW);
+  PORTB &= ~(1 << PB0);
   SPDR = data;
   asm volatile("nop"); 
   //SPI.transfer(data) //SPI.h repurposed to work with c
   //shiftOut(sdinPin, sclkPin, MSBFIRST, data)
   while(!(SPSR & (1<<SPIF)));
-  digitalWrite(scePin, HIGH);
+  //digitalWrite(scePin, HIGH);
+  PORTB |= (1 << PB0);
  // delay_ms(1);
 }
 
@@ -519,17 +527,17 @@ void invertDisplay()
 void lcdBegin(void)
 {
   //Configure control pins
-  pinMode(scePin, OUTPUT);
+  /*pinMode(scePin, OUTPUT);
   pinMode(rstPin, OUTPUT);
   pinMode(dcPin, OUTPUT);
   pinMode(sdinPin, OUTPUT);
   pinMode(sclkPin, OUTPUT);
-  pinMode(blPin, OUTPUT);
+  pinMode(blPin, OUTPUT);*/
 
   //Attempts to manually drive the LCD using ATMega
-  /*DDRB = (1<<PB1) | (1<<PB4) | (1<<PB5) | (1<<PB7);
-  PORTB |= (1<<PB4);
-  DDRD = (1<<PD0) | (1<<PD4);*/
+  DDRB |= (1<<PB0) | (1<<PB1) | (1<<PB5) | (1<<PB7);
+  PORTB |= (1<<PB0);
+  DDRD = (1<<PD0) | (1<<PD4);
   analogWrite(blPin, 255);
 
   SPCR |= (1<<SPE) | (1<<MSTR) | (1<<SPR0);
@@ -539,9 +547,11 @@ void lcdBegin(void)
   //SPI.setDataMode(SPI_MODE0);
   //SPI.setBitOrder(MSBFIRST);
   //Reset the LCD to a known state
-  digitalWrite(rstPin, LOW);
-  delay_ms(200);  //100ms low pulse minimum to reset, but using 200 to be safe
-  digitalWrite(rstPin, HIGH);
+  //digitalWrite(rstPin, LOW);
+  PORTB &= ~(1 << PB1);
+  delay_ms(100);  //100ms low pulse max to reset
+  //digitalWrite(rstPin, HIGH);
+  PORTB |= (1 << PORTB1);
 
   LCDWrite(LCD_COMMAND, 0x21); //Tell LCD extended commands follow
   LCDWrite(LCD_COMMAND, 0x80); //Set LCD Vop (Contrast)
