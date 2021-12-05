@@ -374,14 +374,14 @@ int main(void) {
 	Display_state = Display_SMStart;
 //	Test_state = Test_SMStart;
 	while (1) {
-		//tickReadSpeed();
-		//tickSpeed();
-		//tickPosition();
-		//tickDisplay();
-		clearDisplay(BLACK);
-		gotoXY(0, 0);
-		setChar('A', 0, 0, BLACK);
-		updateDisplay();
+		tickReadSpeed();
+		tickSpeed();
+		tickPosition();
+		tickDisplay();
+		//clearDisplay(BLACK);
+		//gotoXY(0, 0);
+		//setChar('A', 0, 0, BLACK);
+		//updateDisplay();
 		while(!TimerFlag);
 		TimerFlag = 0;
 	}
