@@ -189,6 +189,21 @@ byte displayMap[LCD_WIDTH * LCD_HEIGHT / 8] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // (72,40)->(83,47) !!! The bottom right pixel!
 };
 
+void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val)
+{
+	uint8_t i;
+
+	for (i = 0; i < 8; i++) {
+		if (bitOrder == LSBFIRST)
+			digitalWrite(dataPin, !!(val & (1 << i)) );
+		else
+			digitalWrite(dataPin, !!(val & (1 << (7 - i))) );
+
+		digitalWrite(clockPin, HIGH);
+		digitalWrite(clockPin, LOW);
+			
+	}
+}
 // There are two memory banks in the LCD, data/RAM and commands.
 // This function sets the DC pin high or low depending, and then
 // sends the data byte
@@ -206,11 +221,11 @@ void LCDWrite(byte data_or_command, byte data)
   //Send the data
   digitalWrite(scePin, LOW);
   //PORTB &= ~(1 << PB0);
-  SPDR = data;
-  asm volatile("nop"); 
+  //SPDR = data;
+  //asm volatile("nop"); 
   //SPI.transfer(data) //SPI.h repurposed to work with c
-  //shiftOut(sdinPin, sclkPin, MSBFIRST, data)
-  while(!(SPSR & (1<<SPIF))) ;
+  shiftOut(sdinPin, sclkPin, MSBFIRST, data);
+  //while(!(SPSR & (1<<SPIF))) ;
   digitalWrite(scePin, HIGH);
   //PORTB |= (1 << PB0);
 }
