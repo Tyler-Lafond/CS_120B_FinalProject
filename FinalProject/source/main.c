@@ -389,7 +389,7 @@ int main(void) {
     /* Insert your solution below */
 	ADC_init();
 	lcdBegin();
-	TimerSet(5500);
+	TimerSet(5400);
 	TimerOn();
 	ReadSpeed_state = ReadSpeed_SMStart;
 	Speed_state = Speed_SMStart;
