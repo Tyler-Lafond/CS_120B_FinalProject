@@ -549,12 +549,12 @@ void lcdBegin(void)
   //Reset the LCD to a known state
   digitalWrite(rstPin, LOW);
   //PORTB &= ~(1 << PB1);
-  delay_ms(100);  //100ms low pulse max to reset
+  //delay_ms(100);  //100ms low pulse max to reset
   digitalWrite(rstPin, HIGH);
   //PORTB |= (1 << PORTB1);
 
   LCDWrite(LCD_COMMAND, 0x21); //Tell LCD extended commands follow
-  LCDWrite(LCD_COMMAND, 0x80); //Set LCD Vop (Contrast)
+  LCDWrite(LCD_COMMAND, 0xB9); //Set LCD Vop (Contrast)
   LCDWrite(LCD_COMMAND, 0x04); //Set Temp coefficent
   LCDWrite(LCD_COMMAND, 0x14); //LCD bias mode 1:48 (try 0x13)
   //We must send 0x20 before modifying the display control mode
