@@ -281,7 +281,6 @@ void tickDisplay() {
 		case Display_Show:
 			clearDisplay(WHITE);
 			//updateDisplay();
-			setStr(vSPD, 0, 0, BLACK);
 			if (vSpeed < 0) {
 				tempDisplay = vSpeed * -1;
 				setStr(neg, 36, 0, BLACK);
@@ -289,10 +288,10 @@ void tickDisplay() {
 			}
 			else
 			{
-				setChar(vSpeed + '0', 36, 0, BLACK);
+				setChar(' ', 36, 0, BLACK);
+				setChar(vSpeed + '0', 42, 0, BLACK);
 			}
 
-			setStr(hSPD, 0, 8, BLACK);
 			if (hSpeed < 0) {
 				tempDisplay = hSpeed * -1;
 				setStr(neg, 36, 8, BLACK);
@@ -300,10 +299,10 @@ void tickDisplay() {
 			}
 			else
 			{
-				setChar(hSpeed + '0', 36, 8, BLACK);
+				setChar(' ', 36, 8, BLACK);
+				setChar(hSpeed + '0', 42, 8, BLACK);
 			}
 
-			setStr(vPOS, 0, 32, BLACK);
 			if (vPos < 0) {
 				setStr(neg, 36, 32, BLACK);
 				tempDisplay = vPos * -1;
@@ -316,16 +315,17 @@ void tickDisplay() {
 				}
 			}
 			else {
+				setChar(' ', 36, 32, BLACK);
 				if ((vPos / 10) != 0) {
-					setChar((vPos / 10) + '0', 36, 32, BLACK);
-					setChar((vPos % 10) + '0', 42, 32, BLACK);
+					setChar((vPos / 10) + '0', 42, 32, BLACK);
+					setChar((vPos % 10) + '0', 48, 32, BLACK);
 				}
 				else {
-					setChar((vPos % 10) + '0', 36, 32, BLACK);
+					setChar(' ', 42, 32, BLACK);
+					setChar((vPos % 10) + '0', 48, 32, BLACK);
 				}
 			}
 
-			setStr(hPOS, 0, 40, BLACK);
 			if (hPos < 0) {
 				setStr(neg, 36, 40, BLACK);
 				tempDisplay = hPos * -1;
@@ -338,12 +338,14 @@ void tickDisplay() {
 				}
 			}
 			else {
+				setChar(' ', 36, 40, BLACK);
 				if ((hPos / 10) != 0) {
-					setChar((hPos / 10) + '0', 36, 40, BLACK);
-					setChar((hPos % 10) + '0', 42, 40, BLACK);
+					setChar((hPos / 10) + '0', 42, 40, BLACK);
+					setChar((hPos % 10) + '0', 48, 40, BLACK);
 				}
 				else {
-					setChar((hPos % 10) + '0', 36, 40, BLACK);
+					setChar(' ', 42, 40, BLACK);
+					setChar((hPos % 10) + '0', 48, 40, BLACK);
 				}
 			}
 			updateDisplay();
@@ -389,6 +391,10 @@ int main(void) {
     /* Insert your solution below */
 	ADC_init();
 	lcdBegin();
+	setStr(vSPD, 0, 0, BLACK);
+	setStr(hSPD, 0, 8, BLACK);
+	setStr(vPOS, 0, 32, BLACK);
+	setStr(hPOS, 0, 40, BLACK);
 	TimerSet(5400);
 	TimerOn();
 	ReadSpeed_state = ReadSpeed_SMStart;
