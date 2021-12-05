@@ -210,7 +210,7 @@ void LCDWrite(byte data_or_command, byte data)
   asm volatile("nop"); 
   //SPI.transfer(data) //SPI.h repurposed to work with c
   //shiftOut(sdinPin, sclkPin, MSBFIRST, data)
-  while(!(SPSR & (1<<SPIF)));
+  while(!(SPSR & (1<<SPIF))){ asm("nop"); };
   digitalWrite(scePin, HIGH);
   //PORTB |= (1 << PB0);
   delay_ms(1);
