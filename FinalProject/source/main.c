@@ -139,6 +139,8 @@ void tickSpeed() {
 				vSpeed = -5;
 			}
 
+			vSpeed = vSpeed * -1;
+
 			if (hPort >= (deg*10))
 			{
 				hSpeed = 5;
@@ -279,7 +281,7 @@ void tickDisplay() {
 	switch(Display_state)
 	{
 		case Display_Show:
-			clearDisplay(WHITE);
+			//clearDisplay(WHITE);
 			//updateDisplay();
 			if (vSpeed < 0) {
 				tempDisplay = vSpeed * -1;
