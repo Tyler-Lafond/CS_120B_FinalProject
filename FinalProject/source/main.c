@@ -262,6 +262,7 @@ void tickPosition() {
 }
 enum Display_states { Display_SMStart, Display_Show } Display_state;
 void tickDisplay() {
+	static unsigned char tempDisplay;
 	switch(Display_state)
 	{
 		case Display_SMStart:
@@ -282,8 +283,9 @@ void tickDisplay() {
 			//updateDisplay();
 			setStr(vSPD, 0, 0, BLACK);
 			if (vSpeed < 0) {
+				tempDisplay = vSpeed * -1;
 				setStr(neg, 36, 0, BLACK);
-				setChar((vSpeed * -1) + '0', 42, 0, BLACK);
+				setChar(tempDisplay + '0', 42, 0, BLACK);
 			}
 			else
 			{
@@ -292,8 +294,9 @@ void tickDisplay() {
 
 			setStr(hSPD, 0, 8, BLACK);
 			if (hSpeed < 0) {
+				tempDisplay = hSpeed * -1;
 				setStr(neg, 36, 8, BLACK);
-				setChar((hSpeed * -1) + '0', 42, 8, BLACK);
+				setChar(tempDisplay + '0', 42, 8, BLACK);
 			}
 			else
 			{
@@ -303,24 +306,44 @@ void tickDisplay() {
 			setStr(vPOS, 0, 32, BLACK);
 			if (vPos < 0) {
 				setStr(neg, 36, 32, BLACK);
-				if (((vPos * -1) / 10) != 0) {
-					setChar(((vPos * -1) / 10) + '0', 42, 32, BLACK);
-					setChar(((vPos * -1) % 10) + '0', 48, 32, BLACK);
+				tempDisplay = vPos * -1;
+				if ((tempDisplay / 10) != 0) {
+					setChar((tempDisplay / 10) + '0', 42, 32, BLACK);
+					setChar((tempDisplay % 10) + '0', 48, 32, BLACK);
 				}
 				else {
-					setChar(((vPos * -1) % 10) + '0', 42, 32, BLACK);
+					setChar((tempDisplay % 10) + '0', 42, 32, BLACK);
+				}
+			}
+			else {
+				if ((vPos / 10) != 0) {
+					setChar((vPos / 10) + '0', 36, 32, BLACK);
+					setChar((vPos % 10) + '0', 42, 32, BLACK);
+				}
+				else {
+					setChar((vPos % 10) + '0', 36, 32, BLACK);
 				}
 			}
 
-			setStr(hPOS, 0, 32, BLACK);
+			setStr(hPOS, 0, 40, BLACK);
 			if (hPos < 0) {
-				setStr(neg, 36, 32, BLACK);
-				if (((hPos * -1) / 10) != 0) {
-					setChar(((hPos * -1) / 10) + '0', 42, 32, BLACK);
-					setChar(((hPos * -1) % 10) + '0', 48, 32, BLACK);
+				setStr(neg, 36, 40, BLACK);
+				tempDisplay = hPos * -1;
+				if ((tempDisplay / 10) != 0) {
+					setChar((tempDisplay / 10) + '0', 42, 40, BLACK);
+					setChar((tempDisplay % 10) + '0', 48, 40, BLACK);
 				}
 				else {
-					setChar(((hPos * -1) % 10) + '0', 42, 32, BLACK);
+					setChar((tempDisplay % 10) + '0', 42, 32, BLACK);
+				}
+			}
+			else {
+				if ((hPos / 10) != 0) {
+					setChar((hPos / 10) + '0', 36, 40, BLACK);
+					setChar((hPos % 10) + '0', 42, 40, BLACK);
+				}
+				else {
+					setChar((hPos % 10) + '0', 36, 32, BLACK);
 				}
 			}
 			updateDisplay();
