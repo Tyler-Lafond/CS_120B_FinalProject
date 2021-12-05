@@ -556,7 +556,7 @@ void lcdBegin(void)
   DDRD = (1<<PD0) | (1<<PD4);*/
   analogWrite(blPin, 255);
 
-  SPCR = (1<<SPE) | (1<<MSTR) | (1<<SPI2X) | /*(1<<SPR1) |*/ (1<<SPR0);
+  SPCR = (1<<SPE) | (1<<MSTR) | (1<<SPR0);
   //SPCR &= ~((1<<CPOL) | (1<<CPHA) | (1<<DORD));
 
   //SPI.begin(); //SPI.h Repurposed to work with c
@@ -570,7 +570,7 @@ void lcdBegin(void)
   //PORTB |= (1 << PORTB1);
 
   LCDWrite(LCD_COMMAND, 0x21); //Tell LCD extended commands follow
-  LCDWrite(LCD_COMMAND, 0xC8); //Set LCD Vop (Contrast)
+  LCDWrite(LCD_COMMAND, 0xB1); //Set LCD Vop (Contrast)
   LCDWrite(LCD_COMMAND, 0x04); //Set Temp coefficent
   LCDWrite(LCD_COMMAND, 0x14); //LCD bias mode 1:48 (try 0x13)
   //We must send 0x20 before modifying the display control mode
