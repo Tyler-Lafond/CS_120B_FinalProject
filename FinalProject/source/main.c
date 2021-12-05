@@ -378,7 +378,7 @@ int main(void) {
 		//tickSpeed();
 		//tickPosition();
 		//tickDisplay();
-		clearDisplay(WHITE);
+		//clearDisplay(WHITE);
 		gotoXY(0, 0);
 		setChar('A', 0, 0, BLACK);
 		updateDisplay();
