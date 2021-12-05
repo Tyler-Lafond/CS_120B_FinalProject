@@ -189,6 +189,7 @@ byte displayMap[LCD_WIDTH * LCD_HEIGHT / 8] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // (72,40)->(83,47) !!! The bottom right pixel!
 };
 
+/*
 void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val)
 {
 	uint8_t i;
@@ -204,6 +205,7 @@ void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val)
 			
 	}
 }
+*/
 // There are two memory banks in the LCD, data/RAM and commands.
 // This function sets the DC pin high or low depending, and then
 // sends the data byte
@@ -221,11 +223,11 @@ void LCDWrite(byte data_or_command, byte data)
   //Send the data
   digitalWrite(scePin, LOW);
   //PORTB &= ~(1 << PB0);
-  //SPDR = data;
+  SPDR = data;
   //asm volatile("nop"); 
   //SPI.transfer(data) //SPI.h repurposed to work with c
-  shiftOut(sdinPin, sclkPin, MSBFIRST, data);
-  //while(!(SPSR & (1<<SPIF))) ;
+  //shiftOut(sdinPin, sclkPin, MSBFIRST, data);
+  while(!(SPSR & (1<<SPIF))) ;
   digitalWrite(scePin, HIGH);
   //PORTB |= (1 << PB0);
 }
@@ -570,7 +572,7 @@ void lcdBegin(void)
   LCDWrite(LCD_COMMAND, 0x21); //Tell LCD extended commands follow
   LCDWrite(LCD_COMMAND, 0xCF); //Set LCD Vop (Contrast)
   LCDWrite(LCD_COMMAND, 0x04); //Set Temp coefficent
-  LCDWrite(LCD_COMMAND, 0x13); //LCD bias mode 1:48 (try 0x13)
+  LCDWrite(LCD_COMMAND, 0x14); //LCD bias mode 1:48 (try 0x13)
   //We must send 0x20 before modifying the display control mode
   LCDWrite(LCD_COMMAND, 0x20);
   LCDWrite(LCD_COMMAND, 0x0C); //Set display control, normal mode.
