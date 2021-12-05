@@ -556,7 +556,7 @@ void lcdBegin(void)
   DDRD = (1<<PD0) | (1<<PD4);*/
   analogWrite(blPin, 255);
 
-  SPCR = (1<<SPE) | (1<<MSTR);// | (1<<SPR1) | (1<<SPR0);
+  SPCR = (1<<SPE) | (1<<MSTR) | (1<<SPI2X) | /*(1<<SPR1) |*/ (1<<SPR0);
   //SPCR &= ~((1<<CPOL) | (1<<CPHA) | (1<<DORD));
 
   //SPI.begin(); //SPI.h Repurposed to work with c
