@@ -7,9 +7,9 @@
 Most of these pins can be moved to any digital or analog pin.
 DN(MOSI)and SCLK should be left where they are (SPI pins). The
 LED (backlight) pin should remain on a PWM-capable pin. */
-const int scePin = 1;   // SCE - Chip select, pin 3 on LCD.
+const int scePin = 5;   // SCE - Chip select, pin 3 on LCD.
 const int rstPin = 2;   // RST - Reset, pin 4 on LCD.
-const int dcPin = 14;    // DC - Data/Command, pin 5 on LCD.
+const int dcPin = 1;    // DC - Data/Command, pin 5 on LCD.
 const int sdinPin = 6;  // DN(MOSI) - Serial data, pin 6 on LCD.
 const int sclkPin = 8;  // SCLK - Serial clock, pin 7 on LCD.
 const int blPin = 18;    // LED - Backlight LED, pin 8 on LCD.
@@ -195,25 +195,25 @@ byte displayMap[LCD_WIDTH * LCD_HEIGHT / 8] = {
 void LCDWrite(byte data_or_command, byte data)
 {
   //Tell the LCD that we are writing either to data or a command
- // digitalWrite(dcPin, data_or_command);
-  if (data_or_command == LCD_DATA) {
+  digitalWrite(dcPin, data_or_command);
+  /*if (data_or_command == LCD_DATA) {
 	PORTD |= (1 << PD0);
   }
   else if (data_or_command == LCD_COMMAND) {
 	PORTD &= ~(1 << PD0);
-  }
+  }*/
 
   //Send the data
-  //digitalWrite(scePin, LOW);
-  PORTB &= ~(1 << PB0);
+  digitalWrite(scePin, LOW);
+  //PORTB &= ~(1 << PB0);
   SPDR = data;
   asm volatile("nop"); 
   //SPI.transfer(data) //SPI.h repurposed to work with c
   //shiftOut(sdinPin, sclkPin, MSBFIRST, data)
   while(!(SPSR & (1<<SPIF)));
-  //digitalWrite(scePin, HIGH);
-  PORTB |= (1 << PB0);
- // delay_ms(1);
+  digitalWrite(scePin, HIGH);
+  //PORTB |= (1 << PB0);
+  delay_ms(1);
 }
 
 
@@ -527,17 +527,17 @@ void invertDisplay()
 void lcdBegin(void)
 {
   //Configure control pins
-  /*pinMode(scePin, OUTPUT);
+  pinMode(scePin, OUTPUT);
   pinMode(rstPin, OUTPUT);
   pinMode(dcPin, OUTPUT);
   pinMode(sdinPin, OUTPUT);
   pinMode(sclkPin, OUTPUT);
-  pinMode(blPin, OUTPUT);*/
+  pinMode(blPin, OUTPUT);
 
   //Attempts to manually drive the LCD using ATMega
-  DDRB |= (1<<PB0) | (1<<PB1) | (1<<PB5) | (1<<PB7);
+  /*DDRB |= (1<<PB0) | (1<<PB1) | (1<<PB5) | (1<<PB7);
   PORTB |= (1<<PB0);
-  DDRD = (1<<PD0) | (1<<PD4);
+  DDRD = (1<<PD0) | (1<<PD4);*/
   analogWrite(blPin, 255);
 
   SPCR |= (1<<SPE) | (1<<MSTR) | (1<<SPR0);
@@ -547,11 +547,11 @@ void lcdBegin(void)
   //SPI.setDataMode(SPI_MODE0);
   //SPI.setBitOrder(MSBFIRST);
   //Reset the LCD to a known state
-  //digitalWrite(rstPin, LOW);
-  PORTB &= ~(1 << PB1);
+  digitalWrite(rstPin, LOW);
+  //PORTB &= ~(1 << PB1);
   delay_ms(100);  //100ms low pulse max to reset
-  //digitalWrite(rstPin, HIGH);
-  PORTB |= (1 << PORTB1);
+  digitalWrite(rstPin, HIGH);
+  //PORTB |= (1 << PORTB1);
 
   LCDWrite(LCD_COMMAND, 0x21); //Tell LCD extended commands follow
   LCDWrite(LCD_COMMAND, 0x80); //Set LCD Vop (Contrast)
