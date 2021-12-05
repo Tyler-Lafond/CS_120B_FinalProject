@@ -380,7 +380,7 @@ int main(void) {
 		//tickDisplay();
 		clearDisplay(WHITE);
 		gotoXY(0, 0);
-		setChar('C', 0, 0, BLACK);
+		setChar('A', 0, 0, BLACK);
 		updateDisplay();
 		while(!TimerFlag);
 		TimerFlag = 0;

@@ -7,12 +7,12 @@
 Most of these pins can be moved to any digital or analog pin.
 DN(MOSI)and SCLK should be left where they are (SPI pins). The
 LED (backlight) pin should remain on a PWM-capable pin. */
-const int scePin = 5;   // SCE - Chip select, pin 3 on LCD.
-const int rstPin = 2;   // RST - Reset, pin 4 on LCD.
-const int dcPin = 1;    // DC - Data/Command, pin 5 on LCD.
-const int sdinPin = 6;  // DN(MOSI) - Serial data, pin 6 on LCD.
-const int sclkPin = 8;  // SCLK - Serial clock, pin 7 on LCD.
-const int blPin = 18;    // LED - Backlight LED, pin 8 on LCD.
+const int scePin = 4;   // SCE - Chip select, pin 3 on LCD.
+const int rstPin = 1;   // RST - Reset, pin 4 on LCD.
+const int dcPin = 0;    // DC - Data/Command, pin 5 on LCD.
+const int sdinPin = 5;  // DN(MOSI) - Serial data, pin 6 on LCD.
+const int sclkPin = 7;  // SCLK - Serial clock, pin 7 on LCD.
+const int blPin = 12;    // LED - Backlight LED, pin 8 on LCD.
 
 /* PCD8544-specific defines: */
 #define LCD_COMMAND  0
@@ -541,7 +541,7 @@ void lcdBegin(void)
   analogWrite(blPin, 255);
 
   SPCR = (1<<SPE) | (1<<MSTR) | (1<<SPR0);
-  SPCR &= ~((1<<CPOL) | (1<<CPHA) | (1<<DORD));
+  //SPCR &= ~((1<<CPOL) | (1<<CPHA) | (1<<DORD));
 
   //SPI.begin(); //SPI.h Repurposed to work with c
   //SPI.setDataMode(SPI_MODE0);
