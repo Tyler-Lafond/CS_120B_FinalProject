@@ -557,7 +557,7 @@ void lcdBegin(void)
   analogWrite(blPin, 255);
 
   SPCR = (1<<SPE) | (1<<MSTR) | (1<<SPR0);
-  //SPCR &= ~((1<<CPOL) | (1<<CPHA) | (1<<DORD));
+  SPCR &= ~((1<<CPOL) | (1<<CPHA) | (1<<DORD));
 
   //SPI.begin(); //SPI.h Repurposed to work with c
   //SPI.setDataMode(SPI_MODE0);
@@ -565,7 +565,7 @@ void lcdBegin(void)
   //Reset the LCD to a known state
   digitalWrite(rstPin, LOW);
   //PORTB &= ~(1 << PB1);
-  //delay_ms(100);  //100ms low pulse max to reset
+  delay_ms(100);  //100ms low pulse max to reset
   digitalWrite(rstPin, HIGH);
   //PORTB |= (1 << PORTB1);
 
