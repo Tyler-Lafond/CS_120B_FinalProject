@@ -334,7 +334,7 @@ void tickDisplay() {
 					setChar((tempDisplay % 10) + '0', 48, 40, BLACK);
 				}
 				else {
-					setChar((tempDisplay % 10) + '0', 42, 32, BLACK);
+					setChar((tempDisplay % 10) + '0', 42, 40, BLACK);
 				}
 			}
 			else {
@@ -343,7 +343,7 @@ void tickDisplay() {
 					setChar((hPos % 10) + '0', 42, 40, BLACK);
 				}
 				else {
-					setChar((hPos % 10) + '0', 36, 32, BLACK);
+					setChar((hPos % 10) + '0', 36, 40, BLACK);
 				}
 			}
 			updateDisplay();
