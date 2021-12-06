@@ -264,7 +264,7 @@ void tickPosition() {
 }
 enum Display_states { Display_SMStart, Display_Show } Display_state;
 void tickDisplay() {
-	static char tempDisplay;
+	static unsigned char tempDisplay;
 	switch(Display_state)
 	{
 		case Display_SMStart:
@@ -397,7 +397,7 @@ int main(void) {
 	setStr(hSPD, 0, 8, BLACK);
 	setStr(vPOS, 0, 32, BLACK);
 	setStr(hPOS, 0, 40, BLACK);
-	TimerSet(1000);
+	TimerSet(500);
 	TimerOn();
 	ReadSpeed_state = ReadSpeed_SMStart;
 	Speed_state = Speed_SMStart;
