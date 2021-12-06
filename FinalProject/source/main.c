@@ -397,7 +397,7 @@ int main(void) {
 	setStr(hSPD, 0, 8, BLACK);
 	setStr(vPOS, 0, 32, BLACK);
 	setStr(hPOS, 0, 40, BLACK);
-	TimerSet(5000);
+	TimerSet(1000);
 	TimerOn();
 	ReadSpeed_state = ReadSpeed_SMStart;
 	Speed_state = Speed_SMStart;
