@@ -1,7 +1,5 @@
 #include "Arduino.h"
 #include "io.h"
-//#include <avr/interrupt.h>
-//#include "SPI.h"
 
 /* Pin definitions:
 Most of these pins can be moved to any digital or analog pin.
@@ -213,24 +211,15 @@ void LCDWrite(byte data_or_command, byte data)
 {
   //Tell the LCD that we are writing either to data or a command
   digitalWrite(dcPin, data_or_command);
-  /*if (data_or_command == LCD_DATA) {
-	PORTD |= (1 << PD0);
-  }
-  else if (data_or_command == LCD_COMMAND) {
-	PORTD &= ~(1 << PD0);
-  }*/
 
   //Send the data
   digitalWrite(scePin, LOW);
-  //PORTB &= ~(1 << PB0);
+  //Sets the data and waits; Pg 231 of ATMega1284 datasheet
   SPDR = data;
-  //asm volatile("nop"); 
-  //SPI.transfer(data) //SPI.h repurposed to work with c
-  //shiftOut(sdinPin, sclkPin, MSBFIRST, data);
   while(!(SPSR & (1<<SPIF))) ;
+
+  //Pin set high once completed
   digitalWrite(scePin, HIGH);
-  //PORTB |= (1 << PB0);
-  //delay_ms(2);
 }
 
 
@@ -557,18 +546,15 @@ void lcdBegin(void)
   DDRD = (1<<PD0) | (1<<PD4);*/
   analogWrite(blPin, 255);
 
-  SPCR = (1<<SPE) | (1<<MSTR) | (1 << SPI2X);// | (1<<SPR0);
+  // Enables SPI, sets Master, sets clock rate to fck/2; Pg 231-5 of ATMega datasheet
+  // fck/2 is used because ATMega runs on 8MHz, and LCD can run at most 4MHz
+  SPCR = (1<<SPE) | (1<<MSTR) | (1 << SPI2X);
   SPCR &= ~((1<<CPOL) | (1<<CPHA) | (1<<DORD));
 
-  //SPI.begin(); //SPI.h Repurposed to work with c
-  //SPI.setDataMode(SPI_MODE0);
-  //SPI.setBitOrder(MSBFIRST);
   //Reset the LCD to a known state
   digitalWrite(rstPin, LOW);
-  //PORTB &= ~(1 << PB1);
   delay_ms(100);  //100ms low pulse max to reset
   digitalWrite(rstPin, HIGH);
-  //PORTB |= (1 << PORTB1);
 
   LCDWrite(LCD_COMMAND, 0x21); //Tell LCD extended commands follow
   LCDWrite(LCD_COMMAND, 0xB1); //Set LCD Vop (Contrast)
@@ -577,7 +563,7 @@ void lcdBegin(void)
   //We must send 0x20 before modifying the display control mode
   LCDWrite(LCD_COMMAND, 0x20);
   LCDWrite(LCD_COMMAND, 0x0C); //Set display control, normal mode.
-  clearDisplay(WHITE);
+  clearDisplay(WHITE); //Clear the display ahead of time
 }
 
 
