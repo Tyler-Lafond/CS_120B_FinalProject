@@ -523,10 +523,6 @@ void lcdBegin(void)
   pinMode(sclkPin, OUTPUT);
   pinMode(blPin, OUTPUT);
 
-  //Attempts to manually drive the LCD using ATMega
-  /*DDRB |= (1<<PB0) | (1<<PB1) | (1<<PB5) | (1<<PB7);
-  PORTB |= (1<<PB0);
-  DDRD = (1<<PD0) | (1<<PD4);*/
   analogWrite(blPin, 255);
 
   // Enables SPI, sets Master, sets clock rate to fck/2; Pg 231-5 of ATMega datasheet
