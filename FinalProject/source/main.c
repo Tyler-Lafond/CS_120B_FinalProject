@@ -194,10 +194,10 @@ void tickSpeed() {
 enum Position_States { Position_SMStart, Position_Track } Position_state;
 void tickPosition() {
 	static unsigned char even;
-	static unsigned char vDist;
-	static unsigned char hDist;
-	static unsigned char vRem;
-	static unsigned char hRem;
+	static char vDist;
+	static char hDist;
+	static char vRem;
+	static char hRem;
 	switch(Position_state)
 	{
 		case Position_SMStart:
