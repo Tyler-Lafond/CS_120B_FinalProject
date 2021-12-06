@@ -16,25 +16,28 @@
 //#include "SparkFun_MMA8452Q.h"
 #endif
 
-unsigned short MAX = 1004;
+unsigned short MAX = 1004; // ADC Bounds
 unsigned short MIN = 30;
-unsigned short deg;
-unsigned short vPort = 0;
-unsigned short hPort = 0;
-unsigned short temp;
-char vSpeed, hSpeed;
-char vPos, hPos;
-unsigned char itr, iPrint;
+unsigned short deg; // Dividing upper-bound of ADC readings
+unsigned short vPort = 0; // Value on the vertical pot
+unsigned short hPort = 0; // Value on the horizontal pot
+char vSpeed, hSpeed; // Converted speed values
+char vPos, hPos; // Current positions on 100x100 grid
+
+//String labels for values to LCD Screen
 char vSpd[6] = "vSPD:";
 char hSpd[6] = "hSPD:";
 char vPosi[6] = "vPOS:";
 char hPosi[6] = "hPOS:";
-char neg = '-';
+char neg = '-'; // Char for indicating a negative number
+
+// Pointers to labels
 char* vSPD = vSpd;
 char* hSPD = hSpd;
 char* vPOS = vPosi;
 char* hPOS = hPosi;
 
+// Funciton to initialize ADC
 void ADC_init() {
 	ADCSRA |= (1 << ADEN) | (1 << ADSC) | (1 << ADATE);
 	// ADEN: setting this bit enables analog-to-digital conversion.
@@ -44,25 +47,31 @@ void ADC_init() {
 	// 	the previous conversion completes.
 } 
 
+//Tick function and states for reading the speeds on ADC
 enum ReadSpeed_states { ReadSpeed_SMStart, ReadSpeed_Read };
 int tickReadSpeed(int state);
 
+//Tick function and states for converting ADC values to actual speeds
 enum Speed_states { Speed_SMStart, Speed_Convert };
 int tickSpeed(int state);
 
+//Tick function and states for updating the current position based on even ticks
 enum Position_States { Position_SMStart, Position_Track };
 int tickPosition(int state);
 
+//Tick function and states for the LCD
 enum Display_states { Display_SMStart, Display_Show };
 int tickDisplay(int state);
+
 
 int main(void) {
     /* Insert DDR and PORT initializations */
 	DDRA = 0x00; PORTA = 0xFF;
 	DDRB = 0xFF; PORTB = 0x00;
+	//DDRC = 0xFF; PORTC = 0x00; Would have been used for accelerometer
 	DDRD = 0xFF; PORTD = 0x00;
     /* Insert your solution below */
-	unsigned char i = 0;
+	unsigned char i = 0; // Initializing all tasks
 	tasks[i].state = ReadSpeed_SMStart;
 	tasks[i].period = periodReadSpeed;
 	tasks[i].elapsedTime = tasks[i].period;
@@ -84,14 +93,15 @@ int main(void) {
 	tasks[i].TickFct = &tickDisplay;
 	//i++;
 	
-	ADC_init();
+	ADC_init(); //Initializing ADC and LCD
 	lcdBegin();
 
 	setStr(vSPD, 0, 0, BLACK); //Preliminary LCD setup
 	setStr(hSPD, 0, 8, BLACK);
 	setStr(vPOS, 0, 32, BLACK);
 	setStr(hPOS, 0, 40, BLACK);
-	TimerSet(tasksPeriodGCD);
+
+	TimerSet(tasksPeriodGCD); //Setting period and turning on timer
 	TimerOn();
 
 	while (1) {
@@ -99,7 +109,9 @@ int main(void) {
 	return 1;
 }
 
+//Full function for reading ADC values
 int tickReadSpeed(int state) {
+	//Transitions
 	switch(state)
 	{
 		case ReadSpeed_SMStart:
@@ -113,9 +125,11 @@ int tickReadSpeed(int state) {
 			break;
 	}
 
+	//Actions
 	switch(state)
 	{
 		case ReadSpeed_Read:
+			//Alternates between the horizontal and vertical pins
 			ADCSRA |= (1 << ADSC);
 			ADMUX = 0x00;
 			hPort = ADC;
@@ -131,8 +145,11 @@ int tickReadSpeed(int state) {
 	return state;
 }
 
+//Full function for converting ADC values to real speeds
 int tickSpeed(int state) {
-	deg = MAX/11;
+	deg = MAX/11; // 11 different values for speed
+
+	//Transitions
 	switch(state)
 	{
 		case Speed_SMStart:
@@ -146,9 +163,11 @@ int tickSpeed(int state) {
 			break;
 	}
 
+	//Actions
 	switch(state)
 	{
 		case Speed_Convert:
+			//Series of if-else statemets to determine speeds
 			if (vPort >= (deg*10))
 			{
 				vSpeed = 5;
@@ -194,7 +213,7 @@ int tickSpeed(int state) {
 				vSpeed = -5;
 			}
 
-			vSpeed = vSpeed * -1;
+			vSpeed = vSpeed * -1; //vSpeed inverted for joystick to feel more natural to use based on demo layout
 
 			if (hPort >= (deg*10))
 			{
@@ -249,15 +268,20 @@ int tickSpeed(int state) {
 	return state;
 }
 
+//Full function for updating the position
 int tickPosition(int state) {
-	static unsigned char even;
-	static char vDist;
+	//Values local to position function
+	static unsigned char even; //Triggers main actions on 1
+	static char vDist; //Distances traveled within 1 second timeframe
 	static char hDist;
-	static char vRem;
+	static char vRem; //Remainder of average distance updated on next even tick
 	static char hRem;
+
+	//Transitions
 	switch(state)
 	{
 		case Position_SMStart:
+			//Values initialized
 			vPos = 0;
 			hPos = 0;
 			even = 0;
@@ -275,17 +299,21 @@ int tickPosition(int state) {
 			break;
 	}
 
+	//Actions
 	switch(state)
 	{
 		case Position_Track:
+			// Distances updated every tick
 			vDist += vSpeed;
 			hDist += hSpeed;
 
 			if(even)
 			{
+				//Positions updated every other tick
 				vPos += (vDist / 2) + vRem;
 				hPos += (hDist / 2) + hRem;
 
+				// Keeps positions within 100x100 grid
 				if(vPos > 50)
 				{
 					vPos = 50;
@@ -304,15 +332,18 @@ int tickPosition(int state) {
 					hPos = -50;
 				}
 
+				// Remainders saved for later
 				vRem = vDist % 2;
 				hRem = hDist % 2;
+				// Distances and even reset
 				vDist = 0;
 				hDist = 0;
 				even = 0;
 			}
+			//Odd ticks
 			else
 			{
-				even = 1;
+				even = 1; 
 			}
 			break;
 		default:
@@ -322,8 +353,11 @@ int tickPosition(int state) {
 	return state;
 }
 
+//Full function for the LCD
 int tickDisplay(int state) {
-	static unsigned char tempDisplay;
+	static unsigned char tempDisplay; //Used for displaying negative values
+	
+	//Transitions
 	switch(state)
 	{
 		case Display_SMStart:
@@ -337,9 +371,12 @@ int tickDisplay(int state) {
 			break;
 	}
 
+	//Actions
 	switch(state)
 	{
 		case Display_Show:
+			//Negative values are multiplied by -1 and put into tempDisplay
+			//Values are output to LCD
 			if (vSpeed < 0) {
 				tempDisplay = vSpeed * -1;
 				setChar(neg, 36, 0, BLACK);
@@ -362,6 +399,7 @@ int tickDisplay(int state) {
 				setChar(hSpeed + '0', 42, 8, BLACK);
 			}
 
+			//Positions can be double digit numbers, so division is used to output them
 			if (vPos < 0) {
 				setChar(neg, 36, 32, BLACK);
 				tempDisplay = vPos * -1;
@@ -409,7 +447,7 @@ int tickDisplay(int state) {
 					setChar((hPos % 10) + '0', 48, 40, BLACK);
 				}
 			}
-			updateDisplay();
+			updateDisplay(); //Display updates all values on screen at once
 			break;
 		default:
 			break;
