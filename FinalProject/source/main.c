@@ -264,7 +264,7 @@ void tickPosition() {
 }
 enum Display_states { Display_SMStart, Display_Show } Display_state;
 void tickDisplay() {
-	static unsigned char tempDisplay;
+	static char tempDisplay;
 	switch(Display_state)
 	{
 		case Display_SMStart:
@@ -284,7 +284,7 @@ void tickDisplay() {
 			//clearDisplay(WHITE);
 			//updateDisplay();
 			if (vSpeed < 0) {
-				tempDisplay = abs(vSpeed);
+				tempDisplay = vSpeed * -1;
 				setStr(neg, 36, 0, BLACK);
 				setChar(tempDisplay + '0', 42, 0, BLACK);
 			}
