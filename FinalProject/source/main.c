@@ -13,6 +13,7 @@
 #include "timer.h"
 #include "io.h"
 #include "LCD_Functions.h"
+//#include "SparkFun_MMA8452Q.h"
 #endif
 
 unsigned short MAX = 1004;
@@ -34,7 +35,6 @@ char* hSPD = hSpd;
 char* vPOS = vPosi;
 char* hPOS = hPosi;
 
-
 void ADC_init() {
 	ADCSRA |= (1 << ADEN) | (1 << ADSC) | (1 << ADATE);
 	// ADEN: setting this bit enables analog-to-digital conversion.
@@ -44,21 +44,75 @@ void ADC_init() {
 	// 	the previous conversion completes.
 } 
 
-enum ReadSpeed_states { ReadSpeed_SMStart, ReadSpeed_Read } ReadSpeed_state;
-void tickReadSpeed() {
-	switch(ReadSpeed_state)
+enum ReadSpeed_states { ReadSpeed_SMStart, ReadSpeed_Read };
+int tickReadSpeed(int state);
+
+enum Speed_states { Speed_SMStart, Speed_Convert };
+int tickSpeed(int state);
+
+enum Position_States { Position_SMStart, Position_Track };
+int tickPosition(int state);
+
+enum Display_states { Display_SMStart, Display_Show };
+int tickDisplay(int state);
+
+int main(void) {
+    /* Insert DDR and PORT initializations */
+	DDRA = 0x00; PORTA = 0xFF;
+	DDRB = 0xFF; PORTB = 0x00;
+	DDRD = 0xFF; PORTD = 0x00;
+    /* Insert your solution below */
+	unsigned char i = 0;
+	tasks[i].state = ReadSpeed_SMStart;
+	tasks[i].period = periodReadSpeed;
+	tasks[i].elapsedTime = tasks[i].period;
+	tasks[i].TickFct = &tickReadSpeed;
+	i++;
+	tasks[i].state = Speed_SMStart;
+	tasks[i].period = periodSpeed;
+	tasks[i].elapsedTime = tasks[i].period;
+	tasks[i].TickFct = &tickSpeed;
+	i++;
+	tasks[i].state = Position_SMStart;
+	tasks[i].period = periodPosition;
+	tasks[i].elapsedTime = tasks[i].period;
+	tasks[i].TickFct = &tickPosition;
+	i++;
+	tasks[i].state = Display_SMStart;
+	tasks[i].period = periodDisplay;
+	tasks[i].elapsedTime = tasks[i].period;
+	tasks[i].TickFct = &tickDisplay;
+	//i++;
+	
+	ADC_init();
+	lcdBegin();
+	setStr(vSPD, 0, 0, BLACK); //Preliminary LCD setup
+	setStr(hSPD, 0, 8, BLACK);
+	setStr(vPOS, 0, 32, BLACK);
+	setStr(hPOS, 0, 40, BLACK);
+	TimerSet(tasksPeriodGCD);
+	TimerOn();
+
+	while (1) {
+	}
+	return 1;
+}
+
+int tickReadSpeed(int state) {
+	switch(state)
 	{
 		case ReadSpeed_SMStart:
-			ReadSpeed_state = ReadSpeed_Read;
+			state = ReadSpeed_Read;
 			break;
 		case ReadSpeed_Read:
-			ReadSpeed_state = ReadSpeed_Read;
+			state = ReadSpeed_Read;
 			break;
 		default:
+			state = ReadSpeed_SMStart;
 			break;
 	}
 
-	switch(ReadSpeed_state)
+	switch(state)
 	{
 		case ReadSpeed_Read:
 			ADCSRA |= (1 << ADSC);
@@ -72,25 +126,26 @@ void tickReadSpeed() {
 		default:
 			break;
 	}
+
+	return state;
 }
 
-enum Speed_states { Speed_SMStart, Speed_Convert } Speed_state;
-void tickSpeed() {
+int tickSpeed(int state) {
 	deg = MAX/11;
-	switch(Speed_state)
+	switch(state)
 	{
 		case Speed_SMStart:
-			Speed_state = Speed_Convert;
+			state = Speed_Convert;
 			break;
 		case Speed_Convert:
-			Speed_state = Speed_Convert;
+			state = Speed_Convert;
 			break;
 		default:
-			Speed_state = Speed_SMStart;
+			state = Speed_SMStart;
 			break;
 	}
 
-	switch(Speed_state)
+	switch(state)
 	{
 		case Speed_Convert:
 			if (vPort >= (deg*10))
@@ -189,16 +244,17 @@ void tickSpeed() {
 		default:
 			break;
 	}
+
+	return state;
 }
 
-enum Position_States { Position_SMStart, Position_Track } Position_state;
-void tickPosition() {
+int tickPosition(int state) {
 	static unsigned char even;
 	static char vDist;
 	static char hDist;
 	static char vRem;
 	static char hRem;
-	switch(Position_state)
+	switch(state)
 	{
 		case Position_SMStart:
 			vPos = 0;
@@ -208,16 +264,17 @@ void tickPosition() {
 			hDist = 0;
 			vRem = 0;
 			hRem = 0;
-			Position_state = Position_Track;
+			state = Position_Track;
 			break;
 		case Position_Track:
+			state = Position_Track;
 			break;
 		default:
-			Position_state = Position_SMStart;
+			state = Position_SMStart;
 			break;
 	}
 
-	switch(Position_state)
+	switch(state)
 	{
 		case Position_Track:
 			vDist += vSpeed;
@@ -260,28 +317,28 @@ void tickPosition() {
 		default:
 			break;
 	}
+
+	return state;
 }
-enum Display_states { Display_SMStart, Display_Show } Display_state;
-void tickDisplay() {
+
+int tickDisplay(int state) {
 	static unsigned char tempDisplay;
-	switch(Display_state)
+	switch(state)
 	{
 		case Display_SMStart:
-			Display_state = Display_Show;
+			state = Display_Show;
 			break;
 		case Display_Show:
-			Display_state = Display_Show;
+			state = Display_Show;
 			break;
 		default:
-			Display_state = Display_SMStart;
+			state = Display_SMStart;
 			break;
 	}
 
-	switch(Display_state)
+	switch(state)
 	{
 		case Display_Show:
-			//clearDisplay(WHITE);
-			//updateDisplay();
 			if (vSpeed < 0) {
 				tempDisplay = vSpeed * -1;
 				setChar(neg, 36, 0, BLACK);
@@ -356,66 +413,6 @@ void tickDisplay() {
 		default:
 			break;
 	}
-}
 
-//SM to test features
-/*
-enum Test_states { Test_SMStart, Test_Test } Test_state;
-void tickTest() {
-	switch(Test_state)
-	{
-		case Test_SMStart:
-			Test_state = Test_Test;
-			break;
-		case Test_Test:
-			break;
-		default:
-			Test_state = Test_SMStart;
-			break;
-	}
-
-	switch(Test_state)
-	{
-		case Test_Test:
-			LCD_ClearScreen();
-			LCD_Cursor(1);
-			LCD_WriteData(1 + '0');
-			break;
-		default:
-			break;
-	}
-}*/
-
-int main(void) {
-    /* Insert DDR and PORT initializations */
-	DDRA = 0x00; PORTA = 0xFF;
-	DDRB = 0xFF; PORTB = 0x00;
-	DDRD = 0xFF; PORTD = 0x00;
-    /* Insert your solution below */
-	ADC_init();
-	lcdBegin();
-	setStr(vSPD, 0, 0, BLACK);
-	setStr(hSPD, 0, 8, BLACK);
-	setStr(vPOS, 0, 32, BLACK);
-	setStr(hPOS, 0, 40, BLACK);
-	TimerSet(500);
-	TimerOn();
-	ReadSpeed_state = ReadSpeed_SMStart;
-	Speed_state = Speed_SMStart;
-	Position_state = Position_SMStart;
-	Display_state = Display_SMStart;
-//	Test_state = Test_SMStart;
-	while (1) {
-		tickReadSpeed();
-		tickSpeed();
-		tickPosition();
-		tickDisplay();
-		//clearDisplay(BLACK);
-		//gotoXY(0, 0);
-		//setChar('A', 0, 0, BLACK);
-		//updateDisplay();
-		while(!TimerFlag);
-		TimerFlag = 0;
-	}
-	return 1;
+	return state;
 }

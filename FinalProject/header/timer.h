@@ -3,11 +3,11 @@
 // This software is provided with no warranties.
 
 ////////////////////////////////////////////////////////////////////////////////
-
 #ifndef TIMER_H
 #define TIMER_H
 
 #include <avr/interrupt.h>
+#include "task.h"
 
 volatile unsigned char TimerFlag = 0; // TimerISR() sets this to 1. C programmer should clear to 0.
 
@@ -51,10 +51,10 @@ void TimerOn() {
 void TimerOff() {
 	TCCR1B 	= 0x00; // bit3bit2bit1bit0=0000: timer off
 }
-
+/* //Moved to task.h
 void TimerISR() {
 	TimerFlag = 1;
-}
+}*/
 
 // In our approach, the C programmer does not touch this ISR, but rather TimerISR()
 ISR(TIMER1_COMPA_vect)
