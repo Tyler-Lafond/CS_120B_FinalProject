@@ -336,7 +336,8 @@ void tickDisplay() {
 					setChar((tempDisplay % 10) + '0', 48, 40, BLACK);
 				}
 				else {
-					setChar((tempDisplay % 10) + '0', 42, 40, BLACK);
+					setChar(' ', 42, 40, BLACK);
+					setChar((tempDisplay % 10) + '0', 48, 40, BLACK);
 				}
 			}
 			else {
