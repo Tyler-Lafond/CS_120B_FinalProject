@@ -86,6 +86,7 @@ int main(void) {
 	
 	ADC_init();
 	lcdBegin();
+
 	setStr(vSPD, 0, 0, BLACK); //Preliminary LCD setup
 	setStr(hSPD, 0, 8, BLACK);
 	setStr(vPOS, 0, 32, BLACK);

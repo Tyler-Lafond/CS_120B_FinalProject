@@ -14,11 +14,11 @@ typedef struct task {
 task tasks [4];
 
 const unsigned char tasksNum = 4;
-const unsigned long tasksPeriodGCD = 500;
+const unsigned long tasksPeriodGCD = 125;
 const unsigned long periodReadSpeed = 500;
 const unsigned long periodSpeed = 500;
 const unsigned long periodPosition = 500;
-const unsigned long periodDisplay = 500;
+const unsigned long periodDisplay = 125;
 
 void TimerISR() { //moved from timer.h; uses task scheduler system
 	unsigned char num;
