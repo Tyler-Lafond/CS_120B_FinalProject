@@ -21,7 +21,7 @@ const unsigned long tasksPeriodGCD = 250;
 const unsigned long periodReadSpeed = 500;
 const unsigned long periodSpeed = 500;
 const unsigned long periodPosition = 500;
-const unsigned long periodDisplay = 250;
+const unsigned long periodDisplay = 250; //To accomodate for the screen being slower than the ATMega, the period is lower than the rest of the SMs
 
 void TimerISR() { //moved from timer.h; uses task scheduler system
 	unsigned char num;
