@@ -4,6 +4,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+//Setup the task structure
 typedef struct task {
 	int state; //Current State
 	unsigned long period; //Tick rate of task
@@ -11,8 +12,10 @@ typedef struct task {
 	int (*TickFct)(int); //Function for task's tick
 } task;
 
+//Only 4 tasks in final version
 task tasks [4];
 
+//Define periods for tasks as well as the number of tasks
 const unsigned char tasksNum = 4;
 const unsigned long tasksPeriodGCD = 250;
 const unsigned long periodReadSpeed = 500;
