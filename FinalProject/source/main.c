@@ -22,7 +22,7 @@ unsigned short vPort = 0;
 unsigned short hPort = 0;
 unsigned short temp;
 char vSpeed, hSpeed;
-short vPos, hPos;
+char vPos, hPos;
 unsigned char itr, iPrint;
 char vSpd[6] = "vSPD:";
 char hSpd[6] = "hSPD:";
