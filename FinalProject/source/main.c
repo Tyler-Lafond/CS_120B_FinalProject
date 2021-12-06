@@ -284,7 +284,7 @@ void tickDisplay() {
 			//clearDisplay(WHITE);
 			//updateDisplay();
 			if (vSpeed < 0) {
-				tempDisplay = vSpeed * -1;
+				tempDisplay = vSpeed & 0x7F;
 				setStr(neg, 36, 0, BLACK);
 				setChar(tempDisplay + '0', 42, 0, BLACK);
 			}
