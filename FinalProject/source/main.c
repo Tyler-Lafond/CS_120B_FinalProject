@@ -129,7 +129,7 @@ int tickReadSpeed(int state) {
 	switch(state)
 	{
 		case ReadSpeed_Read:
-			//Alternates between the horizontal and vertical pins
+			//Alternates between the horizontal and vertical pins (pg 331-2 of ATMega datasheet)
 			ADCSRA |= (1 << ADSC);
 			ADMUX = 0x00;
 			hPort = ADC;
