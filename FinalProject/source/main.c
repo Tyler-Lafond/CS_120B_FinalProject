@@ -28,12 +28,11 @@ char vSpd[6] = "vSPD:";
 char hSpd[6] = "hSPD:";
 char vPosi[6] = "vPOS:";
 char hPosi[6] = "hPOS:";
-char negative[1] = "-";
+char neg = '-';
 char* vSPD = vSpd;
 char* hSPD = hSpd;
 char* vPOS = vPosi;
 char* hPOS = hPosi;
-char* neg = negative;
 
 
 void ADC_init() {
@@ -284,8 +283,8 @@ void tickDisplay() {
 			//clearDisplay(WHITE);
 			//updateDisplay();
 			if (vSpeed < 0) {
-				tempDisplay = vSpeed & 0x7F;
-				setStr(neg, 36, 0, BLACK);
+				tempDisplay = vSpeed * -1;
+				setChar(neg, 36, 0, BLACK);
 				setChar(tempDisplay + '0', 42, 0, BLACK);
 			}
 			else
@@ -296,7 +295,7 @@ void tickDisplay() {
 
 			if (hSpeed < 0) {
 				tempDisplay = hSpeed * -1;
-				setStr(neg, 36, 8, BLACK);
+				setChar(neg, 36, 8, BLACK);
 				setChar(tempDisplay + '0', 42, 8, BLACK);
 			}
 			else
@@ -306,7 +305,7 @@ void tickDisplay() {
 			}
 
 			if (vPos < 0) {
-				setStr(neg, 36, 32, BLACK);
+				setChar(neg, 36, 32, BLACK);
 				tempDisplay = vPos * -1;
 				if ((tempDisplay / 10) != 0) {
 					setChar((tempDisplay / 10) + '0', 42, 32, BLACK);
@@ -329,7 +328,7 @@ void tickDisplay() {
 			}
 
 			if (hPos < 0) {
-				setStr(neg, 36, 40, BLACK);
+				setChar(neg, 36, 40, BLACK);
 				tempDisplay = hPos * -1;
 				if ((tempDisplay / 10) != 0) {
 					setChar((tempDisplay / 10) + '0', 42, 40, BLACK);
