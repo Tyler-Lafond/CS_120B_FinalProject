@@ -95,7 +95,6 @@ int main(void) {
 	TimerOn();
 
 	while (1) {
-
 	}
 	return 1;
 }
