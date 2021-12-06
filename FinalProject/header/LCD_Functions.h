@@ -230,7 +230,7 @@ void LCDWrite(byte data_or_command, byte data)
   while(!(SPSR & (1<<SPIF))) ;
   digitalWrite(scePin, HIGH);
   //PORTB |= (1 << PB0);
-  delay_ms(5);
+  delay_ms(2);
 }
 
 
