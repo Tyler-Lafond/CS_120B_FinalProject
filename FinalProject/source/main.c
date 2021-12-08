@@ -114,6 +114,18 @@ int main(void) {
 	tasks[i].elapsedTime = tasks[i].period;
 	tasks[i].TickFct = &tickPosition;
 	i++;
+	/* Tasks for acclerometer SMs
+	tasks[i].state = AccelRead_SMStart;
+	tasks[i].period = periodAccelRead;
+	tasks[i].elapsedTime = tasks[i].period;
+	tasks[i].TickFct = &tickAccelRead;
+	i++;
+	tasks[i].state = Accel_SMStart;
+	tasks[i].period = periodAccel;
+	tasks[i].elapsedTime = tasks[i].period;
+	tasks[i].TickFct = &tickAccel;
+	i++;
+	*/
 	tasks[i].state = Display_SMStart;
 	tasks[i].period = periodDisplay;
 	tasks[i].elapsedTime = tasks[i].period;
