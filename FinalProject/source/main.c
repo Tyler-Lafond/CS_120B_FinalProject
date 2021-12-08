@@ -6,6 +6,7 @@
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
+ *  Demo Link: https://youtu.be/puIcdfdonYE
  */
 #include <avr/io.h>
 #ifdef _SIMULATE_
@@ -21,14 +22,25 @@ unsigned short MIN = 30;
 unsigned short deg; // Dividing upper-bound of ADC readings
 unsigned short vPort = 0; // Value on the vertical pot
 unsigned short hPort = 0; // Value on the horizontal pot
+/* variables for calculated accelerometer values
+unsigned float xPort = 0;
+unsigned float yPort = 0;
+unsigned float zPort = 0;
+*/
 char vSpeed, hSpeed; // Converted speed values
 char vPos, hPos; // Current positions on 100x100 grid
+//float xRot, yRot, zRot; Converted values for accelerometer
 
 //String labels for values to LCD Screen
 char vSpd[6] = "vSPD:";
 char hSpd[6] = "hSPD:";
 char vPosi[6] = "vPOS:";
 char hPosi[6] = "hPOS:";
+/* Labels for accelerometer
+char xRotate[6] = "xROT:";
+char yRotate[6] = "yROT:";
+char zRotate[6] = "zROT:";
+*/
 char neg = '-'; // Char for indicating a negative number
 
 // Pointers to labels
@@ -36,8 +48,13 @@ char* vSPD = vSpd;
 char* hSPD = hSpd;
 char* vPOS = vPosi;
 char* hPOS = hPosi;
+/* Pointers to labels for accelerometer
+char* xROT = xRotate;
+char* yROT = yRotate;
+char* zROT = zRotate;
+*/
 
-// Funciton to initialize ADC
+// Function to initialize ADC
 void ADC_init() {
 	ADCSRA |= (1 << ADEN) | (1 << ADSC) | (1 << ADATE);
 	// ADEN: setting this bit enables analog-to-digital conversion.
@@ -58,6 +75,16 @@ int tickSpeed(int state);
 //Tick function and states for updating the current position based on even ticks
 enum Position_States { Position_SMStart, Position_Track };
 int tickPosition(int state);
+
+/*
+//Tick function and states for potential accelerometer reading
+enum AccelRead_States { AccelRead_SMStart, AccelRead_Read };
+int tickAccelRead(int state)
+
+//Tick function and states for potential accelerometer output
+enum Accel_States { Accel_SMStart, Accel_Convert };
+int tickAccel(int state)
+*/
 
 //Tick function and states for the LCD
 enum Display_states { Display_SMStart, Display_Show };
@@ -352,6 +379,70 @@ int tickPosition(int state) {
 
 	return state;
 }
+
+/*
+//Work in progress function for reading accelerometer
+int tickAccelRead(int state) {
+	//Transitions
+	switch(state)
+	{
+		case AccelRead_SMStart:
+			state = AccelRead_Read;
+			break;
+		case AccelRead_Read:
+			state = AccelRead_Read;
+			break;
+		default:
+			state = AccelRead_SMStart;
+			break;
+	}
+	
+	//Actions
+	switch(state)
+	{
+		case AccelRead_Read:
+			xPort = getCalculatedX();
+			yPort = getCalculatedY();
+			zPort = getCalculatedZ();
+			break;
+		default:
+			break;
+	}
+	
+	return state;
+}
+
+//Work in progress function for converting accelerometer values
+int tickAccel(int state) {
+	//Transitions
+	switch(state)
+	{
+		case Accel_SMStart:
+			state = Accel_Convert;
+			break;
+		case Accel_Convert:
+			state = Accel_Convert;
+			break;
+		default:
+			state = Accel_SMStart;
+			break;
+	}
+	
+	//Actions
+	switch(state)
+	{
+		case Accel_Convert:
+			xRot = xPort * 90 / xMAX;
+			yRot = yPort * 90 / yMAX;
+			zRot = zPort * 90 / zMAX;
+			break;
+		default:
+			break;
+	}
+	
+	return state;
+}
+*/
 
 //Full function for the LCD
 int tickDisplay(int state) {
